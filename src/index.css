@@ -1,0 +1,180 @@
+
+
+.trading-list > li{
+  list-style: none;
+}
+
+.table {
+  padding: 1rem 1rem;
+}
+/* Center the whole content */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;  
+}
+
+/* Box container for trade details */
+.trade-container {
+  background: white;
+  opacity:1;
+  padding: 20px 40px;
+  border-radius: 10px;
+  width: 400px; /* Adjust width */
+  height:500px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  text-align: left; /* Right-aligns the text inside */
+  border: 2px solid #ddd; /* Light gray border */
+}
+
+/* Header section with title and X button */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Close button styling */
+.close-btn {
+  border: none;
+  background: white;
+  color: gray;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.outcomeProfit {
+  color: green !important;
+  font-weight: 500;
+}
+
+.outcomeLost {
+  color: red !important;
+  font-weight:500;
+}
+
+/* Center Form */
+.trade-form {
+  max-width: 500px;
+  margin: 40px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Form Fields */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Submit Button */
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.app-container {
+  max-width:1500px; /* Adjust to your preferred width */
+  margin: 0 auto; /* Centers the content */
+  padding: 20px;
+}
+
+.fc-daygrid-event {
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+}
+.paginationDiv {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+
+.paginationButton {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.paginationButton:disabled {
+  background-color: #d6d6d6;
+  cursor: not-allowed;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+select {
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+select:hover {
+  border-color: #007BFF;
+}
+
+select:focus {
+  border-color: #0056b3;
+  outline: none;
+}
