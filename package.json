@@ -21,7 +21,9 @@
     "draft-js": "^0.11.7",
     "draft-js-image-plugin": "^2.0.7",
     "draft-js-plugins-editor": "^3.0.0",
+    "eslint-plugin-prettier": "^5.2.3",
     "moment": "^2.30.1",
+    "prettier": "^3.5.3",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.2",
     "quill": "^2.0.3",
@@ -36,9 +38,11 @@
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.19.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.18",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^15.14.0",
     "vite": "^6.1.0"
   }

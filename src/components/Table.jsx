@@ -13,7 +13,7 @@ export default function Table({ tradedata }) {
   function clickHandler(tradeInput) {
     setSelectedTrade(tradeInput);
     if (selectedTrade && selectedTrade.id === tradeInput.id) {
-      setToggleTrades(prev => !prev); // Toggle visibility if the same trade is clicked
+      setToggleTrades((prev) => !prev); // Toggle visibility if the same trade is clicked
     } else {
       setSelectedTrade(tradeInput);
       setToggleTrades(true); // Ensure visibility if a new trade is clicked
@@ -23,7 +23,7 @@ export default function Table({ tradedata }) {
   // Function to calculate Risk/Reward (RR)
   const calculateRiskReward = (row) => {
     const { side, entry_price, exit_price, stop_loss } = row;
-    if (side === "long") {
+    if (side === 'long') {
       const risk = entry_price - stop_loss;
       const reward = exit_price - entry_price;
       return reward > 0 ? (reward / risk).toFixed(2) : -1;
@@ -47,22 +47,40 @@ export default function Table({ tradedata }) {
   // Prepare data for Ant Design Table
   const data = tradedata.map((tradeInput) => ({
     ...tradeInput,
-    pnl: tradeInput.side === "long"
-      ? Math.round(tradeInput.quantity * (tradeInput.exit_price - tradeInput.entry_price))
-      : Math.round(tradeInput.quantity * -1 * (tradeInput.exit_price - tradeInput.entry_price)),
-    outcome: tradeInput.side === "long"
-      ? tradeInput.quantity * (tradeInput.exit_price - tradeInput.entry_price) > 0
-      : tradeInput.quantity * (tradeInput.exit_price - tradeInput.entry_price) < 0,
+    pnl:
+      tradeInput.side === 'long'
+        ? Math.round(tradeInput.quantity * (tradeInput.exit_price - tradeInput.entry_price))
+        : Math.round(tradeInput.quantity * -1 * (tradeInput.exit_price - tradeInput.entry_price)),
+    outcome:
+      tradeInput.side === 'long'
+        ? tradeInput.quantity * (tradeInput.exit_price - tradeInput.entry_price) > 0
+        : tradeInput.quantity * (tradeInput.exit_price - tradeInput.entry_price) < 0,
     risk_reward: calculateRiskReward(tradeInput), // Add RiskReward column to data
     duration: calculateDuration(tradeInput.entry_datetime, tradeInput.exit_datetime), // Add duration to data
-    durationInMinutes: calculateDuration(tradeInput.entry_datetime, tradeInput.exit_datetime).totalMinutes
+    durationInMinutes: calculateDuration(tradeInput.entry_datetime, tradeInput.exit_datetime)
+      .totalMinutes,
   }));
 
   // Columns for the Ant Design Table
   const columns = [
-    { title: 'TradeID', dataIndex: 'id', key: 'id', sorter: { compare: (a, b) => a.id - b.id, multiple: 1 } },
-    { title: 'Symbol', dataIndex: 'symbol', key: 'symbol', sorter: { compare: (a, b) => a.symbol.localeCompare(b.symbol), multiple: 2 } },
-    { title: 'Side', dataIndex: 'side', key: 'side', sorter: { compare: (a, b) => a.side.localeCompare(b.side), multiple: 3 } },
+    {
+      title: 'TradeID',
+      dataIndex: 'id',
+      key: 'id',
+      sorter: { compare: (a, b) => a.id - b.id, multiple: 1 },
+    },
+    {
+      title: 'Symbol',
+      dataIndex: 'symbol',
+      key: 'symbol',
+      sorter: { compare: (a, b) => a.symbol.localeCompare(b.symbol), multiple: 2 },
+    },
+    {
+      title: 'Side',
+      dataIndex: 'side',
+      key: 'side',
+      sorter: { compare: (a, b) => a.side.localeCompare(b.side), multiple: 3 },
+    },
     { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
     { title: 'Entry Price', dataIndex: 'entry_price', key: 'entry_price' },
     { title: 'Exit Price', dataIndex: 'exit_price', key: 'exit_price' },
@@ -76,21 +94,43 @@ export default function Table({ tradedata }) {
       title: 'Duration',
       dataIndex: 'duration',
       key: 'duration',
-      render: (text, record) => calculateDuration(record.entry_datetime, record.exit_datetime).duration,
+      render: (text, record) =>
+        calculateDuration(record.entry_datetime, record.exit_datetime).duration,
       sorter: { compare: (a, b) => a.durationInMinutes - b.durationInMinutes, multiple: 4 },
     },
-    { title: 'Entry DateTime', dataIndex: 'entry_datetime', key: 'entry_datetime', sorter: { compare: (a, b) => new Date(a.entry_datetime) - new Date(b.entry_datetime), multiple: 5 } },
-    { title: 'Exit DateTime', dataIndex: 'exit_datetime', key: 'exit_datetime', sorter: { compare: (a, b) => new Date(a.exit_datetime) - new Date(b.exit_datetime), multiple: 6 } },
+    {
+      title: 'Entry DateTime',
+      dataIndex: 'entry_datetime',
+      key: 'entry_datetime',
+      sorter: {
+        compare: (a, b) => new Date(a.entry_datetime) - new Date(b.entry_datetime),
+        multiple: 5,
+      },
+    },
+    {
+      title: 'Exit DateTime',
+      dataIndex: 'exit_datetime',
+      key: 'exit_datetime',
+      sorter: {
+        compare: (a, b) => new Date(a.exit_datetime) - new Date(b.exit_datetime),
+        multiple: 6,
+      },
+    },
     {
       title: 'Outcome',
       dataIndex: 'outcome',
       key: 'outcome',
       render: (text, record) => {
         const { side, quantity, entry_price, exit_price } = record;
-        const results = side === 'long'
-          ? quantity * (exit_price - entry_price) > 0
-          : quantity * (exit_price - entry_price) < 0;
-        return <span className={results ? "outcomeProfit" : "outcomeLost"}>{results ? "Profit" : "Loss"}</span>;
+        const results =
+          side === 'long'
+            ? quantity * (exit_price - entry_price) > 0
+            : quantity * (exit_price - entry_price) < 0;
+        return (
+          <span className={results ? 'outcomeProfit' : 'outcomeLost'}>
+            {results ? 'Profit' : 'Loss'}
+          </span>
+        );
       },
     },
     {
@@ -99,13 +139,15 @@ export default function Table({ tradedata }) {
       key: 'pnl',
       render: (text, record) => {
         const { side, quantity, entry_price, exit_price } = record;
-        const results = side === 'long'
-          ? quantity * (exit_price - entry_price) > 0
-          : quantity * (exit_price - entry_price) < 0;
-        const pnl = side === 'long'
-          ? Math.round(quantity * (exit_price - entry_price))
-          : Math.round(quantity * -1 * (exit_price - entry_price));
-        return <span className={results ? "outcomeProfit" : "outcomeLost"}>${pnl}</span>;
+        const results =
+          side === 'long'
+            ? quantity * (exit_price - entry_price) > 0
+            : quantity * (exit_price - entry_price) < 0;
+        const pnl =
+          side === 'long'
+            ? Math.round(quantity * (exit_price - entry_price))
+            : Math.round(quantity * -1 * (exit_price - entry_price));
+        return <span className={results ? 'outcomeProfit' : 'outcomeLost'}>${pnl}</span>;
       },
       sorter: { compare: (a, b) => a.pnl - b.pnl, multiple: 7 },
     },
@@ -117,7 +159,7 @@ export default function Table({ tradedata }) {
 
     // Apply sorting to the full dataset
     if (Array.isArray(sorter)) {
-      sorter.forEach(sort => {
+      sorter.forEach((sort) => {
         const { columnKey, order } = sort;
         if (order) {
           sorted = sorted.sort((a, b) => {
@@ -185,16 +227,12 @@ export default function Table({ tradedata }) {
   );
 }
 
-
-
 // import React from "react";
 // import TradeCards from "./TradeCards";
 // import { useTable, usePagination } from 'react-table';
 
-  
 // //   export default PaginatedTable;
 // export default function Table({tradedata}) {
-
 
 // const [selectedTrade, setSelectedTrade] = React.useState(null);
 // const [toggleTrades,setToggleTrades] = React.useState(false);
@@ -211,18 +249,17 @@ export default function Table({ tradedata }) {
 //     }
 // }
 //     const tradeTables = tradedata.map(
-//         (tradeInput) =>{    
+//         (tradeInput) =>{
 //             const results = tradeInput.side === "long"
 //             ? tradeInput.quantity * (tradeInput.exit_price - tradeInput.entry_price) > 0
 //             : tradeInput.quantity * (tradeInput.exit_price - tradeInput.entry_price) < 0;
-    
+
 //         // Calculate PNL
 //             const pnl = tradeInput.side === "long"
 //             ? Math.round(tradeInput.quantity * (tradeInput.exit_price - tradeInput.entry_price))
 //             : Math.round(tradeInput.quantity * -1 * (tradeInput.exit_price - tradeInput.entry_price));
 //         return(
 
-            
 //             <tr onClick={() => clickHandler(tradeInput)} key={tradeInput.id} style={{ cursor: "pointer" }}>
 //             <th scope="row">{tradeInput.id}</th>
 //             <td>{tradeInput.symbol}</td>
@@ -246,7 +283,7 @@ export default function Table({ tradedata }) {
 //     return (
 //         <div>
 //         <h1>Historical Trades</h1>
-//         <table className="table table-hover"> 
+//         <table className="table table-hover">
 //                 <thead>
 //                 <tr >
 //                     <th scope="col">TradeID</th>
@@ -266,12 +303,12 @@ export default function Table({ tradedata }) {
 //         {/* {console.log("Trade selected:", toggleTrades,selectedTrade)} */}
 //         {toggleTrades && <TradeCards trade={selectedTrade} onClose={() => setSelectedTrade(null)}/>}
 //         </div>
-        
+
 //     );
 // }
 
-
-{/* <tr onClick={clickHandler} >
+{
+  /* <tr onClick={clickHandler} >
 <th scope="row">{id}</th>
 <td>{symbol}</td>
 <td>{side}</td>
@@ -279,4 +316,5 @@ export default function Table({ tradedata }) {
 <td>{entry_price}</td>
 <td>{exit_price}</td>
 <td>{result}</td>
-</tr> */}
+</tr> */
+}
