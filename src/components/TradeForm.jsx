@@ -1,7 +1,6 @@
 export default function TradeForm() {
   return (
     <form className="trade-form">
-      <h1>Work in progress</h1>
       <div className="form-group">
         <label htmlFor="symbol">Symbol</label>
         <input type="text" name="symbol" id="symbol" />

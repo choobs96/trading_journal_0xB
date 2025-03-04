@@ -1,11 +1,11 @@
 // AggregatedStats.js
-import trades from "../data"; // Assuming the trade data is imported from data.js
+import trades from '../data'; // Assuming the trade data is imported from data.js
 
 const calculateAggregatedData = (trades) => {
   const aggregatedData = {};
 
   trades.forEach((trade) => {
-    const date = new Date(trade.entry_datetime).toISOString().split("T")[0]; // Get the date part of entry_datetime
+    const date = new Date(trade.entry_datetime).toISOString().split('T')[0]; // Get the date part of entry_datetime
 
     if (!aggregatedData[date]) {
       aggregatedData[date] = {
@@ -19,22 +19,18 @@ const calculateAggregatedData = (trades) => {
 
     // Calculate PNL for the day
     let pnl = 0;
-    if (trade.side === "long") {
+    if (trade.side === 'long') {
       pnl = (trade.exit_price - trade.entry_price) * trade.quantity;
-    } else if (trade.side === "short") {
+    } else if (trade.side === 'short') {
       pnl = (trade.entry_price - trade.exit_price) * trade.quantity;
     }
 
     // Calculate RR for the day
     let rr = 0;
-    if (trade.side === "long") {
-      rr =
-        (trade.exit_price - trade.entry_price) /
-        (trade.entry_price - trade.stop_loss);
-    } else if (trade.side === "short") {
-      rr =
-        (trade.entry_price - trade.exit_price) /
-        (trade.stop_loss - trade.entry_price);
+    if (trade.side === 'long') {
+      rr = (trade.exit_price - trade.entry_price) / (trade.entry_price - trade.stop_loss);
+    } else if (trade.side === 'short') {
+      rr = (trade.entry_price - trade.exit_price) / (trade.stop_loss - trade.entry_price);
     }
 
     // Update aggregated data
@@ -43,8 +39,8 @@ const calculateAggregatedData = (trades) => {
     aggregatedData[date].totalRR += rr;
 
     if (
-      (trade.side === "long" && trade.exit_price > trade.entry_price) ||
-      (trade.side === "short" && trade.exit_price < trade.entry_price)
+      (trade.side === 'long' && trade.exit_price > trade.entry_price) ||
+      (trade.side === 'short' && trade.exit_price < trade.entry_price)
     ) {
       aggregatedData[date].winningTrades += 1;
     } else {

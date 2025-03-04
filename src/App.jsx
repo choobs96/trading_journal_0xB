@@ -1,29 +1,28 @@
-import NavBar from "./components/Navbar";
-import TradeCards from "./components/TradeCards";
-import Table from "./components/Table";
-import TradeForm from "./components/TradeForm";
-import data from "./data";
-import React from "react";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
-import { Editor } from "primereact/editor";
+import NavBar from './components/Navbar';
+import TradeCards from './components/TradeCards';
+import Table from './components/Table';
+import TradeForm from './components/TradeForm';
+import data from './data';
+import React from 'react';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 
 // Add FullCalendar
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import aggregatedData from "./components/AggregatedStats";
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import aggregatedData from './components/AggregatedStats';
 
 function App() {
   const tradeelements = data.map((tradeinfo) => (
     <TradeCards key={tradeinfo.id} tradeinfo={tradeinfo} />
   ));
-  const [toggleForm, setToggleForm] = React.useState(false);
-  const [value1, setValue1] = React.useState("");
+  const [toggleAdd, setToggleAdd] = React.useState(false);
+  const [value1, setValue1] = React.useState('');
 
   function toggleTradeForm() {
-    setToggleForm((prevState) => !prevState);
+    setToggleAdd((prevState) => !prevState);
   }
 
   function TradeCalendar({ trades }) {
@@ -35,9 +34,9 @@ function App() {
       return {
         title: eventTitle, // Show only essential data in the title
         start: trade.date,
-        backgroundColor: isWin ? "#d5f4ec" : "#f8c2bd",
-        borderColor: isWin ? "#d5f4ec" : "#f8c2bd",
-        textColor: "black",
+        backgroundColor: isWin ? '#d5f4ec' : '#f8c2bd',
+        borderColor: isWin ? '#d5f4ec' : '#f8c2bd',
+        textColor: 'black',
         extendedProps: {
           description: eventDescription, // Store detailed description
           ...trade,
@@ -67,19 +66,17 @@ function App() {
           info.el.style.borderColor = info.event.borderColor;
           info.el.style.color = info.event.textColor;
           // Ensure the event fills the entire day cell
-          info.el.style.margin = "0";
-          info.el.style.padding = "0";
-          info.el.style.height = "100%";
+          info.el.style.margin = '0';
+          info.el.style.padding = '0';
+          info.el.style.height = '100%';
           const description = info.event.extendedProps.description;
 
-          const descriptionElement = document.createElement("div");
+          const descriptionElement = document.createElement('div');
           descriptionElement.textContent = description;
-          descriptionElement.style.fontSize = "10px"; // Smaller font for the description
-          descriptionElement.style.marginTop = "5px"; // Add some space between title and description
+          descriptionElement.style.fontSize = '10px'; // Smaller font for the description
+          descriptionElement.style.marginTop = '5px'; // Add some space between title and description
           info.el.appendChild(descriptionElement); // Append description to the event element
-          const dayFrame = info.el.closest(
-            ".fc-daygrid-day-frame.fc-scrollgrid-sync-inner"
-          );
+          const dayFrame = info.el.closest('.fc-daygrid-day-frame.fc-scrollgrid-sync-inner');
           if (dayFrame) {
             dayFrame.style.backgroundColor = info.event.backgroundColor; // Set the background color of the day frame
           }
@@ -94,7 +91,7 @@ function App() {
         <NavBar onToggleForm={toggleTradeForm} />
       </header>
       <main className="app-container">
-        {toggleForm && <TradeForm />}
+        {toggleAdd && <TradeForm />}
         <Table tradedata={data} />
 
         <div>

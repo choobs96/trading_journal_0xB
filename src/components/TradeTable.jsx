@@ -1,5 +1,4 @@
-import Table2 from "./Table";
-import React from "react";
+import Table2 from './Table';
 
 export default function TradeTable({ data }) {
   // Calculate PNL
@@ -19,11 +18,7 @@ export default function TradeTable({ data }) {
       </thead>
       <tbody>
         {data.map(({ tradeinfo }) => (
-          <Table2
-            key={tradeinfo.id}
-            tradeinfo={tradeinfo}
-            onClick={toggleButton}
-          />
+          <Table2 key={tradeinfo.id} tradeinfo={tradeinfo} onClick={null} />
         ))}
       </tbody>
     </table>
