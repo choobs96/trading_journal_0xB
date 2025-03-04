@@ -1,5 +1,5 @@
 // export default [
-//     {   
+//     {
 //         id: 1,
 //         symbol:"EURUSD",
 //         side: "long",
@@ -7,9 +7,8 @@
 //         entry_price: 1.035,
 //         exit_price: 1.042
 
-
 //     },
-//     {   
+//     {
 //         id: 2,
 //         symbol:"BTCUSDT",
 //         side: "long",
@@ -18,7 +17,7 @@
 //         exit_price: 101538
 
 //     },
-//     {   
+//     {
 //         id: 3,
 //         symbol:"EURUSD",
 //         side: "short",
@@ -27,7 +26,7 @@
 //         exit_price: 1.039
 
 //     },
-//     {   
+//     {
 //         id: 4,
 //         symbol:"EURUSD",
 //         side: "long",
@@ -36,7 +35,7 @@
 //         exit_price: 1.072
 
 //     },
-//     {   
+//     {
 //         id: 5,
 //         symbol:"ETHUSDT",
 //         side: "long",
@@ -87,4 +86,3 @@
 //     'exit_price': 2670,
 //     'entry_datetime': '2024-06-21 14:00:00',
 //     'exit_datetime': '2024-06-22 17:00:00'}]
-

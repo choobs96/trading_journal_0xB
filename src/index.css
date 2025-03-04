@@ -1,6 +1,4 @@
-
-
-.trading-list > li{
+.trading-list > li {
   list-style: none;
 }
 
@@ -18,17 +16,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;  
+  z-index: 9999;
 }
 
 /* Box container for trade details */
 .trade-container {
   background: white;
-  opacity:1;
+  opacity: 1;
   padding: 20px 40px;
   border-radius: 10px;
   width: 400px; /* Adjust width */
-  height:500px;
+  height: 500px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
@@ -62,7 +60,7 @@
 
 .outcomeLost {
   color: red !important;
-  font-weight:500;
+  font-weight: 500;
 }
 
 /* Center Form */
@@ -120,7 +118,7 @@ input:focus {
 }
 
 .app-container {
-  max-width:1500px; /* Adjust to your preferred width */
+  max-width: 1500px; /* Adjust to your preferred width */
   margin: 0 auto; /* Centers the content */
   padding: 20px;
 }
@@ -138,12 +136,11 @@ input:focus {
   gap: 15px;
 }
 
-
 .paginationButton {
   display: flex;
   align-items: center;
   padding: 8px 15px;
-  background-color: #007BFF;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -171,7 +168,7 @@ select {
 }
 
 select:hover {
-  border-color: #007BFF;
+  border-color: #007bff;
 }
 
 select:focus {
