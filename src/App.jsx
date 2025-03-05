@@ -18,7 +18,7 @@ import aggregatedData from './components/AggregatedStats';
 
 function App() {
   const tradeelements = data.map((tradeinfo) => (
-    <TradeCards key={tradeinfo.id} tradeinfo={tradeinfo} />
+    <TradeCards key={tradeinfo.tradeid} tradeinfo={tradeinfo} />
   ));
   const [toggleAdd, setToggleAdd] = React.useState(false);
   const [toggleLogin, setToggleLogin] = React.useState(false);

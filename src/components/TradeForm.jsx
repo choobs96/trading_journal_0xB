@@ -32,14 +32,3 @@ export default function TradeForm() {
     </form>
   );
 }
-
-{
-  /* <th scope="col">TradeID</th>
-<th scope="col">Symbol</th>
-<th scope="col">Side</th>
-<th scope="col">Quantity</th>
-<th scope="col">Entry Price</th>
-<th scope="col">Exit Price</th>
-<th  scope="col">Outcome</th>
-<th  scope="col">PNL</th> */
-}

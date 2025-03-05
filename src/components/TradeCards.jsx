@@ -8,11 +8,11 @@ export default function TradeCards({ trade, onClose }) {
     }
   }
   const results =
-    trade.side === 'long'
-      ? trade.quantity * (trade.exit_price - trade.entry_price) > 0
+    trade.side === 'Buy'
+      ? trade.total_entry_stock_amount * (trade.avg_exit_price - trade.avg_entry_price) > 0
         ? 'Profit'
         : 'Loss'
-      : trade.quantity * (trade.exit_price - trade.entry_price) > 0
+      : trade.total_entry_stock_amount * (trade.avg_exit_price - trade.avg_entry_price) > 0
         ? 'Loss'
         : 'Profit';
   console.log(results);
@@ -29,7 +29,7 @@ export default function TradeCards({ trade, onClose }) {
         </div>
         <div className="trade-content">
           <p>
-            <strong>Trade ID:</strong> {trade.id}
+            <strong>Trade ID:</strong> {trade.tradeid}
           </p>
           <p>
             <strong>Symbol:</strong> {trade.symbol}
@@ -38,13 +38,13 @@ export default function TradeCards({ trade, onClose }) {
             <strong>Side:</strong> {trade.side}
           </p>
           <p>
-            <strong>Quantity:</strong> {trade.quantity}
+            <strong>Quantity:</strong> {trade.total_entry_stock_amount}
           </p>
           <p>
-            <strong>Entry Price:</strong> {trade.entry_price}
+            <strong>Entry Price:</strong> {trade.avg_entry_price}
           </p>
           <p>
-            <strong>Exit Price:</strong> {trade.exit_price}
+            <strong>Exit Price:</strong> {trade.avg_exit_price}
           </p>
           <p>
             <strong>Outcome:</strong>
@@ -55,9 +55,15 @@ export default function TradeCards({ trade, onClose }) {
           <p>
             <strong>PNL:</strong> $
             <span className={results ? 'outcomeProfit' : 'outcomeLost'}>
-              {trade.side === 'long'
-                ? Math.round(trade.quantity * (trade.exit_price - trade.entry_price))
-                : Math.round(trade.quantity * -1 * (trade.exit_price - trade.entry_price))}
+              {trade.side === 'Buy'
+                ? Math.round(
+                    trade.total_entry_stock_amount * (trade.avg_exit_price - trade.avg_entry_price)
+                  )
+                : Math.round(
+                    trade.total_entry_stock_amount *
+                      -1 *
+                      (trade.avg_exit_price - trade.avg_entry_price)
+                  )}
             </span>
           </p>
         </div>

@@ -5,7 +5,7 @@ const calculateAggregatedData = (trades) => {
   const aggregatedData = {};
 
   trades.forEach((trade) => {
-    const date = new Date(trade.entry_datetime).toISOString().split('T')[0]; // Get the date part of entry_datetime
+    const date = new Date(trade.time_of_first_entry).toISOString().split('T')[0]; // Get the date part of entry_datetime
 
     if (!aggregatedData[date]) {
       aggregatedData[date] = {
@@ -18,32 +18,20 @@ const calculateAggregatedData = (trades) => {
     }
 
     // Calculate PNL for the day
-    let pnl = 0;
-    if (trade.side === 'long') {
-      pnl = (trade.exit_price - trade.entry_price) * trade.quantity;
-    } else if (trade.side === 'short') {
-      pnl = (trade.entry_price - trade.exit_price) * trade.quantity;
-    }
+    let pnl = trade.pnl;
 
     // Calculate RR for the day
     let rr = 0;
-    if (trade.side === 'long') {
-      rr = (trade.exit_price - trade.entry_price) / (trade.entry_price - trade.stop_loss);
-    } else if (trade.side === 'short') {
-      rr = (trade.entry_price - trade.exit_price) / (trade.stop_loss - trade.entry_price);
-    }
+    // REMINDER TO FIX THE RR FORMULA
 
     // Update aggregated data
     aggregatedData[date].totalPNL += pnl; // Using totalPNL instead of totalProfit
     aggregatedData[date].totalTrades += 1;
     aggregatedData[date].totalRR += rr;
 
-    if (
-      (trade.side === 'long' && trade.exit_price > trade.entry_price) ||
-      (trade.side === 'short' && trade.exit_price < trade.entry_price)
-    ) {
+    if (trade.outcome === 'Profit') {
       aggregatedData[date].winningTrades += 1;
-    } else {
+    } else if (trade.outcome === 'Loss') {
       aggregatedData[date].losingTrades += 1;
     }
   });
