@@ -532,3 +532,4 @@ const trades = [
     outcome: 'Loss',
   },
 ];
+export default trades;
