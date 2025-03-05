@@ -1,4 +1,4 @@
-export default function NavBar({ onToggleForm }) {
+export default function NavBar(props) {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -24,8 +24,13 @@ export default function NavBar({ onToggleForm }) {
               </a>
             </li>
             <li>
-              <a className="nav-link" href="#" onClick={onToggleForm}>
+              <a className="nav-link" href="#" onClick={props.onToggleForm}>
                 Add Trades
+              </a>
+            </li>
+            <li>
+              <a className="nav-link" href="#" onClick={props.onToggleLogin}>
+                Login
               </a>
             </li>
 

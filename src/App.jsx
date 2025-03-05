@@ -2,6 +2,8 @@ import NavBar from './components/Navbar';
 import TradeCards from './components/TradeCards';
 import Table from './components/Table';
 import TradeForm from './components/TradeForm';
+import LoginPage from './components/LoginPage';
+
 import data from './data';
 import React from 'react';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
@@ -19,10 +21,14 @@ function App() {
     <TradeCards key={tradeinfo.id} tradeinfo={tradeinfo} />
   ));
   const [toggleAdd, setToggleAdd] = React.useState(false);
+  const [toggleLogin, setToggleLogin] = React.useState(false);
   const [value1, setValue1] = React.useState('');
 
   function toggleTradeForm() {
     setToggleAdd((prevState) => !prevState);
+  }
+  function toggleLoginForm() {
+    setToggleLogin((prevState) => !prevState);
   }
 
   function TradeCalendar({ trades }) {
@@ -88,12 +94,12 @@ function App() {
   return (
     <>
       <header>
-        <NavBar onToggleForm={toggleTradeForm} />
+        <NavBar onToggleForm={toggleTradeForm} onToggleLogin={toggleLoginForm} />
       </header>
       <main className="app-container">
         {toggleAdd && <TradeForm />}
+        {toggleLogin && <LoginPage onLoginClose={() => toggleLoginForm()} />}
         <Table tradedata={data} />
-
         <div>
           <TradeCalendar trades={aggregatedData} />
         </div>
