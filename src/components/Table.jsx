@@ -88,10 +88,10 @@ export default function Table({ tradedata }) {
     { title: 'Entry Price', dataIndex: 'entry_price', key: 'entry_price' },
     { title: 'Exit Price', dataIndex: 'exit_price', key: 'exit_price' },
     {
-      title: 'TradeID',
-      dataIndex: 'id',
-      key: 'id',
-      sorter: { compare: (a, b) => a.id - b.id, multiple: 1 },
+      title: 'Risk/Reward',
+      dataIndex: 'risk_reward',
+      key: 'risk_reward',
+      render: (text, record) => calculateRiskReward(record),
     },
     {
       title: 'Duration',
@@ -137,53 +137,9 @@ export default function Table({ tradedata }) {
       },
     },
     {
-      title: 'Side',
-      dataIndex: 'side',
-      key: 'side',
-      sorter: { compare: (a, b) => a.side.localeCompare(b.side), multiple: 3 },
-    },
-    { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
-    { title: 'Entry Price', dataIndex: 'entry_price', key: 'entry_price' },
-    { title: 'Exit Price', dataIndex: 'exit_price', key: 'exit_price' },
-    {
-      title: 'Risk/Reward',
-      dataIndex: 'risk_reward',
-      key: 'risk_reward',
-      render: (text, record) => calculateRiskReward(record),
-    },
-    {
-      title: 'Duration',
-      dataIndex: 'duration',
-      key: 'duration',
-      render: (text, record) =>
-        calculateDuration(record.entry_datetime, record.exit_datetime).duration,
-      sorter: {
-        compare: (a, b) => a.durationInMinutes - b.durationInMinutes,
-        multiple: 4,
-      },
-    },
-    {
-      title: 'Entry DateTime',
-      dataIndex: 'entry_datetime',
-      key: 'entry_datetime',
-      sorter: {
-        compare: (a, b) => new Date(a.entry_datetime) - new Date(b.entry_datetime),
-        multiple: 5,
-      },
-    },
-    {
-      title: 'Exit DateTime',
-      dataIndex: 'exit_datetime',
-      key: 'exit_datetime',
-      sorter: {
-        compare: (a, b) => new Date(a.exit_datetime) - new Date(b.exit_datetime),
-        multiple: 6,
-      },
-    },
-    {
-      title: 'Outcome',
-      dataIndex: 'outcome',
-      key: 'outcome',
+      title: 'PNL',
+      dataIndex: 'pnl',
+      key: 'pnl',
       render: (text, record) => {
         const { side, quantity, entry_price, exit_price } = record;
         const results =
