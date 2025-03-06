@@ -3,6 +3,7 @@ import TradeCards from './components/TradeCards';
 import Table from './components/Table';
 import TradeForm from './components/TradeForm';
 import LoginPage from './components/LoginPage';
+import FileUpload from './components/FileUpload';
 
 import data from './data';
 import React from 'react';
@@ -97,7 +98,7 @@ function App() {
         <NavBar onToggleForm={toggleTradeForm} onToggleLogin={toggleLoginForm} />
       </header>
       <main className="app-container">
-        {toggleAdd && <TradeForm />}
+        {toggleAdd && <FileUpload onUploadClose={() => toggleTradeForm()} />}
         {toggleLogin && <LoginPage onLoginClose={() => toggleLoginForm()} />}
         <Table tradedata={data} />
         <div>

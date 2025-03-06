@@ -147,10 +147,24 @@
 .trade-container {
   background: white;
   opacity: 1;
-  padding: 20px 40px;
+  padding: 20px 20px;
   border-radius: 10px;
   width: 400px; /* Adjust width */
   height: 500px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  text-align: left; /* Right-aligns the text inside */
+  border: 2px solid #ddd; /* Light gray border */
+}
+
+.upload-container {
+  background: white;
+  opacity: 1;
+  padding: 20px 40px;
+  border-radius: 10px;
+  width: 800px; /* Adjust width */
+  height: 650px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;

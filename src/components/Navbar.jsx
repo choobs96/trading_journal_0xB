@@ -25,7 +25,7 @@ export default function NavBar(props) {
             </li>
             <li>
               <a className="nav-link" href="#" onClick={props.onToggleForm}>
-                Add Trades
+                Import Trades
               </a>
             </li>
             <li>
