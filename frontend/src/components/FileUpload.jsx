@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
 
 export default function FileUpload({ onUploadClose }) {
   const [files, setFiles] = useState([]);
@@ -28,6 +29,29 @@ export default function FileUpload({ onUploadClose }) {
     onDrop: handleDrop,
     accept: '.csv', // Accept only CSV files
   });
+
+  // Handle file upload to backend
+  const handleFileUpload = async (e) => {
+    e.preventDefault();
+
+    for (const fileObj of files) {
+      const formData = new FormData();
+      formData.append('file', fileObj.file);
+      formData.append('label', selectedLabels[files.indexOf(fileObj)]);
+
+      try {
+        const response = await axios.post('http://localhost:5001/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log('File uploaded successfully:', response.data);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
+  };
+
   function handleOverlayClick(event) {
     if (event.target.classList.contains('overlay')) {
       onUploadClose();
@@ -91,12 +115,10 @@ export default function FileUpload({ onUploadClose }) {
             ))}
           </ul>
         </div>
-        <button type="submit" className="submit-btn">
+        <button type="submit" className="submit-btn" onClick={handleFileUpload}>
           Upload File
         </button>
       </div>
     </div>
   );
 }
-
-// export default FileUpload;
