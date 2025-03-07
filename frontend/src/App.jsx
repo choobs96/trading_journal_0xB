@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import NavBar from './components/Navbar';
 import TradeCards from './components/TradeCards';
 import Table from './components/Table';
@@ -6,7 +7,6 @@ import LoginPage from './components/LoginPage';
 import FileUpload from './components/FileUpload';
 
 import data from './data';
-import React from 'react';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -16,43 +16,67 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import aggregatedData from './components/AggregatedStats';
+import axios from 'axios';
 
 function App() {
-  const tradeelements = data.map((tradeinfo) => (
-    <TradeCards key={tradeinfo.tradeid} tradeinfo={tradeinfo} />
-  ));
-  const [toggleAdd, setToggleAdd] = React.useState(false);
-  const [toggleLogin, setToggleLogin] = React.useState(false);
-  const [value1, setValue1] = React.useState('');
+  const [toggleAdd, setToggleAdd] = useState(false);
+  const [toggleLogin, setToggleLogin] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem('auth_token') || null);
 
+  // Check authentication on app load
+  useEffect(() => {
+    if (token) {
+      setAuthenticated(true);
+    } else {
+      setAuthenticated(false);
+    }
+  }, [token]);
+
+  // Handle login
+  const handleLogin = async () => {
+    setAuthenticated(true); // User is now authenticated
+    setToggleLogin(false); // Close the login modal after successful login
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    console.log('logging out here');
+    localStorage.removeItem('auth_token');
+    setToken(null);
+    setAuthenticated(false);
+  };
+
+  // Toggle the trade form
   function toggleTradeForm() {
     setToggleAdd((prevState) => !prevState);
   }
+
+  // Toggle the login form
   function toggleLoginForm() {
     setToggleLogin((prevState) => !prevState);
   }
 
-  function TradeCalendar({ trades }) {
+  // Calendar rendering logic (same as before)
+  const TradeCalendar = ({ trades }) => {
     const events = trades.map((trade) => {
       const isWin = trade.totalPNL > 0;
-      const eventTitle = `$${trade.totalPNL} | ${trade.totalTrades}Trades`; // Shortened title
-      const eventDescription = `RR: ${trade.averageRR}\nWR: ${trade.winRate}%`; // Detailed description
+      const eventTitle = `$${trade.totalPNL} | ${trade.totalTrades} Trades`;
+      const eventDescription = `RR: ${trade.averageRR}\nWR: ${trade.winRate}%`;
 
       return {
-        title: eventTitle, // Show only essential data in the title
+        title: eventTitle,
         start: trade.date,
         backgroundColor: isWin ? '#d5f4ec' : '#f8c2bd',
         borderColor: isWin ? '#d5f4ec' : '#f8c2bd',
         textColor: 'black',
         extendedProps: {
-          description: eventDescription, // Store detailed description
+          description: eventDescription,
           ...trade,
         },
         allDay: true,
       };
     });
-
-    // console.log("Output", events);
 
     const handleEventClick = ({ event }) => {
       alert(
@@ -68,11 +92,9 @@ function App() {
         eventClick={handleEventClick}
         height="800px"
         eventDidMount={(info) => {
-          // Apply custom styles to the event element
           info.el.style.backgroundColor = info.event.backgroundColor;
           info.el.style.borderColor = info.event.borderColor;
           info.el.style.color = info.event.textColor;
-          // Ensure the event fills the entire day cell
           info.el.style.margin = '0';
           info.el.style.padding = '0';
           info.el.style.height = '100%';
@@ -80,30 +102,42 @@ function App() {
 
           const descriptionElement = document.createElement('div');
           descriptionElement.textContent = description;
-          descriptionElement.style.fontSize = '10px'; // Smaller font for the description
-          descriptionElement.style.marginTop = '5px'; // Add some space between title and description
-          info.el.appendChild(descriptionElement); // Append description to the event element
+          descriptionElement.style.fontSize = '10px';
+          descriptionElement.style.marginTop = '5px';
+          info.el.appendChild(descriptionElement);
           const dayFrame = info.el.closest('.fc-daygrid-day-frame.fc-scrollgrid-sync-inner');
           if (dayFrame) {
-            dayFrame.style.backgroundColor = info.event.backgroundColor; // Set the background color of the day frame
+            dayFrame.style.backgroundColor = info.event.backgroundColor;
           }
         }}
       />
     );
-  }
+  };
 
   return (
     <>
       <header>
-        <NavBar onToggleForm={toggleTradeForm} onToggleLogin={toggleLoginForm} />
+        <NavBar
+          onToggleForm={toggleTradeForm}
+          onToggleLogin={toggleLoginForm}
+          onLoginupdate={authenticated}
+          onLogout={() => handleLogout()}
+        />
       </header>
       <main className="app-container">
         {toggleAdd && <FileUpload onUploadClose={() => toggleTradeForm()} />}
-        {toggleLogin && <LoginPage onLoginClose={() => toggleLoginForm()} />}
-        <Table tradedata={data} />
-        <div>
-          <TradeCalendar trades={aggregatedData} />
-        </div>
+        {toggleLogin && <LoginPage onLoginClose={() => toggleLoginForm()} onLogin={handleLogin} />}
+
+        {!authenticated && <p>Please log in to access the content.</p>}
+
+        {authenticated && (
+          <>
+            {/* <p>Login Successful!</p> */}
+            {/* <button onClick={handleLogout}>Logout</button> */}
+            <Table tradedata={data} />
+            <TradeCalendar trades={aggregatedData} />
+          </>
+        )}
       </main>
     </>
   );

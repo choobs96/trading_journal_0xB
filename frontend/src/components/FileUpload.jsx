@@ -34,6 +34,14 @@ export default function FileUpload({ onUploadClose }) {
   const handleFileUpload = async (e) => {
     e.preventDefault();
 
+    // Retrieve token from localStorage (or sessionStorage)
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      alert('No token found, please log in.');
+      return;
+    }
+
     for (const fileObj of files) {
       const formData = new FormData();
       formData.append('file', fileObj.file);
@@ -43,6 +51,7 @@ export default function FileUpload({ onUploadClose }) {
         const response = await axios.post('http://localhost:5001/api/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`, // Attach token here
           },
         });
         console.log('File uploaded successfully:', response.data);

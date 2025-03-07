@@ -1,4 +1,6 @@
 export default function NavBar(props) {
+  const login_status = props.onLoginupdate;
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -28,15 +30,20 @@ export default function NavBar(props) {
                 Import Trades
               </a>
             </li>
-            <li>
-              <a className="nav-link" href="#" onClick={props.onToggleLogin}>
-                Login
-              </a>
-            </li>
 
-            {/* <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                </li> */}
+            {login_status ? (
+              <li className="nav-item">
+                <a className="nav-link" href="#" onClick={props.onLogout}>
+                  Logout
+                </a>
+              </li>
+            ) : (
+              <li>
+                <a className="nav-link" href="#" onClick={props.onToggleLogin}>
+                  Login
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>
