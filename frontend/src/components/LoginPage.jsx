@@ -20,15 +20,14 @@ export default function LoginPage({ onLoginClose, onLogin }) {
 
       if (response.data.token) {
         console.log('Logged in successfully');
-        localStorage.setItem('authToken', response.data.token); // Store token in localStorage
-        onLogin(); // Notify parent component about successful login
-        // onLoginClose(); // Close the login form after successful login
+        localStorage.setItem('auth_token', response.data.token); // Store token in localStorage
+        onLogin(response); // Pass the entire response object to onLogin
       } else {
         setError('Invalid credentials');
       }
     } catch (error) {
       console.error('Error during login', error);
-      setError('An error occurred during login');
+      setError(error.response?.data?.message || 'An error occurred during login');
     }
   };
 

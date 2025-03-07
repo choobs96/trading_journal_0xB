@@ -1,0 +1,359 @@
+Time,Text
+2024-04-25 20:32:51,Order 1291816216 for symbol FOREXCOM:EURUSD has been executed at price 1.06978 for 1300000 shares
+2024-04-25 20:32:51,Order 1291816215 successfully cancelled
+2024-04-25 20:32:01,Order 1291816216 modification confirmed
+2024-04-25 20:32:01,Order 1291816215 modification confirmed
+2024-04-25 20:32:01,Modify position for symbol FOREXCOM:EURUSD with SL 1.07210 and TP 1.06979
+2024-04-25 20:31:55,Order 1291816216 modification confirmed
+2024-04-25 20:31:55,Order 1291816215 modification confirmed
+2024-04-25 20:31:55,Modify position for symbol FOREXCOM:EURUSD with SL 1.07210 and TP 1.06970
+2024-04-25 20:31:30,Order 1291816216 successfully placed
+2024-04-25 20:31:30,Order 1291816215 successfully placed
+2024-04-25 20:31:30,Modify position for symbol FOREXCOM:EURUSD with SL 1.07210 and TP 1.06382
+2024-04-25 20:31:24,Order 1291815905 for symbol FOREXCOM:EURUSD has been executed at price 1.07132 for 1300000 shares
+2024-04-25 20:31:24,Order 1291815905 successfully placed
+2024-04-25 20:31:24,Call to place market order to sell 1300000 shares of symbol FOREXCOM:EURUSD 
+2024-03-14 20:22:32,Order 1223821546 for symbol FOREXCOM:EURUSD has been executed at price 1.09360 for 1000000 shares
+2024-03-14 20:22:32,Order 1223821875 successfully cancelled
+2024-03-14 17:13:31,Order 1223821875 successfully placed
+2024-03-14 17:13:31,Order 1223821546 modification confirmed
+2024-03-14 17:13:31,Modify position for symbol FOREXCOM:EURUSD with SL 1.09360 and TP 1.09517
+2024-03-14 17:13:16,Order 1223821546 successfully placed
+2024-03-14 17:13:16,Modify position for symbol FOREXCOM:EURUSD with SL 1.09360
+2024-03-14 17:12:58,Order 1223821081 for symbol FOREXCOM:EURUSD has been executed at price 1.09413 for 1000000 shares
+2024-03-14 17:12:58,Order 1223821081 successfully placed
+2024-03-14 17:12:58,Call to place market order to buy 1000000 shares of symbol FOREXCOM:EURUSD 
+2024-03-13 22:02:27,Order 1222157412 for symbol FOREXCOM:EURUSD has been executed at price 1.09360 for 1800000 shares
+2024-03-13 22:02:27,Order 1222157996 successfully cancelled
+2024-03-13 21:50:31,Order 1222157996 modification confirmed
+2024-03-13 21:50:31,Order 1222157412 modification confirmed
+2024-03-13 21:50:31,Modify position for symbol FOREXCOM:EURUSD with SL 1.09360 and TP 1.09501
+2024-03-13 21:50:18,Order 1222157996 successfully placed
+2024-03-13 21:50:18,Order 1222157412 modification confirmed
+2024-03-13 21:50:18,Modify position for symbol FOREXCOM:EURUSD with SL 1.09360 and TP 1.09493
+2024-03-13 21:50:10,Order 1222157412 successfully placed
+2024-03-13 21:50:10,Modify position for symbol FOREXCOM:EURUSD with SL 1.09360
+2024-03-13 21:50:05,Order 1222157077 for symbol FOREXCOM:EURUSD has been executed at price 1.09407 for 900000 shares
+2024-03-13 21:50:05,Order 1222157077 successfully placed
+2024-03-13 21:50:05,Call to place market order to buy 900000 shares of symbol FOREXCOM:EURUSD 
+2024-03-13 21:49:51,Order 1222156198 for symbol FOREXCOM:EURUSD has been executed at price 1.09407 for 900000 shares
+2024-03-13 21:49:51,Order 1222156198 successfully placed
+2024-03-13 21:49:51,Call to place limit order to buy 900000 shares of symbol FOREXCOM:EURUSD at price 1.09411 
+2024-03-13 21:49:04,Order 1222134824 for symbol FOREXCOM:EURUSD has been executed at price 1.09421 for 1000000 shares
+2024-03-13 21:44:40,Order 1222134824 modification confirmed
+2024-03-13 21:44:40,Modify position for symbol FOREXCOM:EURUSD with SL 1.09420
+2024-03-13 21:44:35,Order 1222134824 successfully placed
+2024-03-13 21:44:35,Modify position for symbol FOREXCOM:EURUSD with SL 1.09420
+2024-03-13 21:44:30,Order 1222134480 for symbol FOREXCOM:EURUSD has been executed at price 1.09359 for 1000000 shares
+2024-03-13 21:44:30,Order 1222134480 successfully placed
+2024-03-13 21:44:30,Call to place market order to sell 1000000 shares of symbol FOREXCOM:EURUSD 
+2024-03-13 21:44:08,Order 1222088250 for symbol FOREXCOM:EURUSD has been executed at price 1.09362 for 1300000 shares
+2024-03-13 21:44:08,Order 1222089043 successfully cancelled
+2024-03-13 21:32:50,Order 1222089043 successfully placed
+2024-03-13 21:32:50,Order 1222088250 modification confirmed
+2024-03-13 21:32:50,Modify position for symbol FOREXCOM:EURUSD with SL 1.09366 and TP 1.09475
+2024-03-13 21:32:38,Order 1222088250 successfully placed
+2024-03-13 21:32:38,Modify position for symbol FOREXCOM:EURUSD with SL 1.09366
+2024-03-13 21:32:31,Order 1222087794 for symbol FOREXCOM:EURUSD has been executed at price 1.09401 for 1300000 shares
+2024-03-13 21:32:31,Order 1222087794 successfully placed
+2024-03-13 21:32:31,Call to place market order to buy 1300000 shares of symbol FOREXCOM:EURUSD 
+2024-03-12 03:58:44,Order 1218217709 for symbol BINANCE:BTCUSDT.P has been executed at price 71840.8 for 1.42 shares
+2024-03-12 03:58:44,Order 1218218748 successfully cancelled
+2024-03-11 22:57:57,Order 1218218748 successfully placed
+2024-03-11 22:57:57,Order 1218217709 modification confirmed
+2024-03-11 22:57:57,Modify position for symbol BINANCE:BTCUSDT.P with SL 71833.9 and TP 73062.2
+2024-03-11 22:57:34,Order 1218217709 successfully placed
+2024-03-11 22:57:34,Modify position for symbol BINANCE:BTCUSDT.P with SL 71833.9
+2024-03-11 22:57:25,Order 1218217271 for symbol BINANCE:BTCUSDT.P has been executed at price 72241.7 for 1.42 shares
+2024-03-11 22:57:25,Order 1218217271 successfully placed
+2024-03-11 22:57:25,Call to place market order to buy 1.42 shares of symbol BINANCE:BTCUSDT.P 
+2024-03-11 22:57:21,Order 1218216844 successfully cancelled
+2024-03-11 22:57:17,Order 1218216844 successfully placed
+2024-03-11 22:57:17,Call to place limit order to buy 1.42 shares of symbol BINANCE:BTCUSDT.P at price 72186.50 
+2024-03-08 18:35:35,Order 1213481302 for symbol FOREXCOM:EURUSD has been executed at price 1.09262 for 600000 shares
+2024-03-08 18:35:35,Order 1213481496 successfully cancelled
+2024-03-08 17:54:42,Order 1213481496 successfully placed
+2024-03-08 17:54:42,Order 1213481302 modification confirmed
+2024-03-08 17:54:42,Modify position for symbol FOREXCOM:EURUSD with SL 1.09262 and TP 1.09505
+2024-03-08 17:54:31,Order 1213481302 successfully placed
+2024-03-08 17:54:31,Modify position for symbol FOREXCOM:EURUSD with SL 1.09262
+2024-03-08 17:54:26,Order 1213481236 for symbol FOREXCOM:EURUSD has been executed at price 1.09345 for 600000 shares
+2024-03-08 17:54:26,Order 1213481236 successfully placed
+2024-03-08 17:54:26,Call to place market order to buy 600000 shares of symbol FOREXCOM:EURUSD 
+2024-03-08 17:15:38,Order 1213374187 for symbol FOREXCOM:EURUSD has been executed at price 1.09306 for 1100000 shares
+2024-03-08 17:15:38,Order 1213375970 successfully cancelled
+2024-03-08 16:32:03,Order 1213375970 successfully placed
+2024-03-08 16:32:03,Order 1213374187 modification confirmed
+2024-03-08 16:32:03,Modify position for symbol FOREXCOM:EURUSD with SL 1.09306 and TP 1.09432
+2024-03-08 16:31:42,Order 1213375491 for symbol FOREXCOM:EURUSD has been executed at price 1.09344 for 100000 shares
+2024-03-08 16:31:42,Order 1213375491 successfully placed
+2024-03-08 16:31:42,Call to place market order to buy 100000 shares of symbol FOREXCOM:EURUSD 
+2024-03-08 16:31:27,Order 1213374187 modification confirmed
+2024-03-08 16:31:26,Modify position for symbol FOREXCOM:EURUSD with SL 1.09306
+2024-03-08 16:30:43,Order 1213374187 successfully placed
+2024-03-08 16:30:43,Modify position for symbol FOREXCOM:EURUSD with SL 1.09292
+2024-03-08 16:30:39,Order 1213374078 for symbol FOREXCOM:EURUSD has been executed at price 1.09348 for 1000000 shares
+2024-03-08 16:30:39,Order 1213374078 successfully placed
+2024-03-08 16:30:39,Call to place market order to buy 1000000 shares of symbol FOREXCOM:EURUSD 
+2024-03-07 22:40:49,Order 1209868450 for symbol BINANCE:BTCUSDT.P has been executed at price 67993.1 for 1.05 shares
+2024-03-07 22:40:49,Order 1209867970 successfully cancelled
+2024-03-07 21:15:32,Order 1211329401 for symbol FOREXCOM:EURUSD has been executed at price 1.08875 for 800000 shares
+2024-03-07 21:15:32,Order 1211329717 successfully cancelled
+2024-03-07 16:37:10,Order 1211329717 successfully placed
+2024-03-07 16:37:10,Order 1211329401 modification confirmed
+2024-03-07 16:37:10,Modify position for symbol FOREXCOM:EURUSD with SL 1.08877 and TP 1.09051
+2024-03-07 16:36:59,Order 1211329401 successfully placed
+2024-03-07 16:36:59,Modify position for symbol FOREXCOM:EURUSD with SL 1.08877
+2024-03-07 16:36:54,Order 1211329162 for symbol FOREXCOM:EURUSD has been executed at price 1.08935 for 800000 shares
+2024-03-07 16:36:50,Order 1211329162 successfully placed
+2024-03-07 16:36:50,Call to place limit order to buy 800000 shares of symbol FOREXCOM:EURUSD at price 1.08935 
+2024-03-06 23:19:53,Order 1209868450 successfully placed
+2024-03-06 23:19:53,Order 1209867970 modification confirmed
+2024-03-06 23:19:53,Modify position for symbol BINANCE:BTCUSDT.P with SL 65319.4 and TP 67991.6
+2024-03-06 23:19:44,Order 1209867970 successfully placed
+2024-03-06 23:19:44,Modify position for symbol BINANCE:BTCUSDT.P with SL 65319.4
+2024-03-06 23:16:17,Order 1209853867 for symbol BINANCE:BTCUSDT.P has been executed at price 66243.9 for 0.5 shares
+2024-03-06 23:16:17,Order 1209853867 successfully placed
+2024-03-06 23:16:17,Call to place market order to buy 0.5 shares of symbol BINANCE:BTCUSDT.P 
+2024-03-06 23:15:43,Order 1209851089 for symbol BINANCE:BTCUSDT.P has been executed at price 66218.2 for 1.1 shares
+2024-03-06 23:15:43,Order 1209851089 successfully placed
+2024-03-06 23:15:43,Call to place market order to buy 1.1 shares of symbol BINANCE:BTCUSDT.P 
+2024-03-06 23:15:37,Order 1209817349 successfully cancelled
+2024-03-06 23:09:24,Order 1209824914 for symbol BINANCE:BTCUSDT.P has been executed at price 65727.7 for 0.05 shares
+2024-03-06 23:09:24,Order 1209824914 successfully placed
+2024-03-06 23:09:24,Call to place market order to sell 0.05 shares of symbol BINANCE:BTCUSDT.P 
+2024-03-06 23:07:56,Order 1209817349 modification confirmed
+2024-03-06 23:07:56,Modify position for symbol BINANCE:BTCUSDT.P with SL 66428.0
+2024-03-06 23:07:47,Order 1209817349 successfully placed
+2024-03-06 23:07:47,Modify position for symbol BINANCE:BTCUSDT.P with SL 66655.7
+2024-03-06 23:07:43,Order 1209816918 for symbol BINANCE:BTCUSDT.P has been executed at price 65512.0 for 0.5 shares
+2024-03-06 23:07:43,Order 1209816918 successfully placed
+2024-03-06 23:07:42,Call to place market order to sell 0.5 shares of symbol BINANCE:BTCUSDT.P 
+2024-03-06 23:04:09,Order 1209592657 for symbol BINANCE:BTCUSDT.P has been executed at price 65643.8 for 0.591 shares
+2024-03-06 23:04:09,Order 1209608141 successfully cancelled
+2024-03-06 22:10:38,Order 1209608141 successfully placed
+2024-03-06 22:10:38,Order 1209592657 modification confirmed
+2024-03-06 22:10:38,Modify position for symbol BINANCE:BTCUSDT.P with SL 65876.1 and TP 68485.9
+2024-03-06 22:03:37,Order 1209592657 successfully placed
+2024-03-06 22:03:37,Modify position for symbol BINANCE:BTCUSDT.P with SL 65876.1
+2024-03-06 22:03:31,Order 1209592348 for symbol BINANCE:BTCUSDT.P has been executed at price 66752.5 for 0.591 shares
+2024-03-06 22:03:31,Order 1209592348 successfully placed
+2024-03-06 22:03:31,Call to place market order to buy 0.591 shares of symbol BINANCE:BTCUSDT.P 
+2024-03-06 01:09:55,Order 1207633988 for symbol BINANCE:BTCUSDT.P has been executed at price 63942.8 for 0.5 shares
+2024-03-06 01:09:55,Order 1207632588 successfully cancelled
+2024-03-06 00:06:20,Order 1207633988 successfully placed
+2024-03-06 00:06:20,Order 1207632588 modification confirmed
+2024-03-06 00:06:20,Modify position for symbol BINANCE:BTCUSDT.P with SL 67718.7 and TP 63944.7
+2024-03-06 00:05:59,Order 1207632588 successfully placed
+2024-03-06 00:05:59,Modify position for symbol BINANCE:BTCUSDT.P with SL 67718.7
+2024-03-06 00:05:52,Order 1207632168 for symbol BINANCE:BTCUSDT.P has been executed at price 66475.1 for 0.5 shares
+2024-03-06 00:05:52,Order 1207632168 successfully placed
+2024-03-06 00:05:52,Call to place market order to sell 0.5 shares of symbol BINANCE:BTCUSDT.P 
+2024-03-06 00:00:00,Order 1207577707 for symbol BINANCE:BTCUSDT has been executed at price 66769.59 for 1 shares
+2024-03-06 00:00:00,Order 1207577973 successfully cancelled
+2024-03-05 23:57:48,Order 1207577973 modification confirmed
+2024-03-05 23:57:48,Order 1207577707 modification confirmed
+2024-03-05 23:57:48,Modify position for symbol BINANCE:BTCUSDT with SL 66798.23 and TP 68325.10
+2024-03-05 23:49:25,Order 1207577973 successfully placed
+2024-03-05 23:49:25,Order 1207577707 modification confirmed
+2024-03-05 23:49:25,Modify position for symbol BINANCE:BTCUSDT with SL 66829.75 and TP 68325.10
+2024-03-05 23:49:20,Order 1207577707 successfully placed
+2024-03-05 23:49:20,Modify position for symbol BINANCE:BTCUSDT with SL 66829.75
+2024-03-05 23:48:22,Order 1207574279 for symbol BINANCE:BTCUSDT has been executed at price 67330.00 for 1 shares
+2024-03-05 23:48:22,Order 1207574279 successfully placed
+2024-03-05 23:48:21,Call to place market order to buy 1 shares of symbol BINANCE:BTCUSDT 
+2024-03-05 22:14:12,Order 1207109533 for symbol FOREXCOM:EURUSD has been executed at price 1.08516 for 900000 shares
+2024-03-05 22:14:12,Order 1207110122 successfully cancelled
+2024-03-05 21:47:26,Order 1207110122 successfully placed
+2024-03-05 21:47:26,Order 1207109533 modification confirmed
+2024-03-05 21:47:26,Modify position for symbol FOREXCOM:EURUSD with SL 1.08515 and TP 1.08335
+2024-03-05 21:47:11,Order 1207109533 successfully placed
+2024-03-05 21:47:11,Modify position for symbol FOREXCOM:EURUSD with SL 1.08515
+2024-03-05 21:46:54,Order 1207108791 for symbol FOREXCOM:EURUSD has been executed at price 1.08455 for 900000 shares
+2024-03-05 21:46:54,Order 1207108791 successfully placed
+2024-03-05 21:46:54,Call to place market order to sell 900000 shares of symbol FOREXCOM:EURUSD 
+2024-03-05 20:09:29,Order 1206701123 for symbol FOREXCOM:EURUSD has been executed at price 1.08472 for 1000000 shares
+2024-03-05 20:09:29,Order 1206701247 successfully cancelled
+2024-03-05 17:11:00,Order 1206701247 modification confirmed
+2024-03-05 17:11:00,Order 1206701123 modification confirmed
+2024-03-05 17:11:00,Modify position for symbol FOREXCOM:EURUSD with SL 1.08473 and TP 1.08623
+2024-03-05 17:10:47,Order 1206701247 successfully placed
+2024-03-05 17:10:47,Order 1206701123 modification confirmed
+2024-03-05 17:10:47,Modify position for symbol FOREXCOM:EURUSD with SL 1.08473 and TP 1.08610
+2024-03-05 17:10:42,Order 1206701123 successfully placed
+2024-03-05 17:10:42,Modify position for symbol FOREXCOM:EURUSD with SL 1.08473
+2024-03-05 17:10:37,Order 1206700998 for symbol FOREXCOM:EURUSD has been executed at price 1.08523 for 1000000 shares
+2024-03-05 17:10:37,Order 1206700998 successfully placed
+2024-03-05 17:10:37,Call to place market order to buy 1000000 shares of symbol FOREXCOM:EURUSD 
+2024-03-05 17:05:36,Order 1206670349 for symbol FOREXCOM:EURUSD has been executed at price 1.08504 for 900000 shares
+2024-03-05 17:05:36,Order 1206670798 successfully cancelled
+2024-03-05 16:50:09,Order 1206670798 successfully placed
+2024-03-05 16:50:09,Order 1206670349 modification confirmed
+2024-03-05 16:50:09,Modify position for symbol FOREXCOM:EURUSD with SL 1.08504 and TP 1.08324
+2024-03-05 16:49:54,Order 1206670349 successfully placed
+2024-03-05 16:49:54,Modify position for symbol FOREXCOM:EURUSD with SL 1.08504
+2024-03-05 16:49:48,Order 1206670215 for symbol FOREXCOM:EURUSD has been executed at price 1.08443 for 900000 shares
+2024-03-05 16:49:48,Order 1206670215 successfully placed
+2024-03-05 16:49:48,Call to place market order to sell 900000 shares of symbol FOREXCOM:EURUSD 
+2024-03-05 16:49:45,Order 1206669416 successfully cancelled
+2024-03-05 16:49:45,Order 1206669239 successfully cancelled
+2024-03-05 16:49:26,Order 1206669239 modification confirmed
+2024-03-05 16:49:26,"Modified order 1206669239 for symbol FOREXCOM:EURUSD with price 1.08448, qty 900000 with SL 1.08504"
+2024-03-05 16:49:16,Order 1206669416 successfully placed
+2024-03-05 16:49:16,Order 1206669239 modification confirmed
+2024-03-05 16:49:16,"Modified order 1206669239 for symbol FOREXCOM:EURUSD with price 1.08448, qty 820000 with SL 1.08504"
+2024-03-05 16:49:08,Order 1206669239 successfully placed
+2024-03-05 16:49:08,Call to place limit order to sell 820000 shares of symbol FOREXCOM:EURUSD at price 1.08448 
+2024-03-05 01:26:44,Order 1205397329 for symbol BINANCE:BTCUSDT.P has been executed at price 67281.3 for 1.367 shares
+2024-03-05 01:26:44,Order 1205388836 successfully cancelled
+2024-03-05 00:49:17,Order 1205397329 successfully placed
+2024-03-05 00:49:17,Order 1205388836 modification confirmed
+2024-03-05 00:49:17,Modify position for symbol BINANCE:BTCUSDT.P with SL 66160.4 and TP 67262.8
+2024-03-05 00:47:44,Order 1205388836 modification confirmed
+2024-03-05 00:47:44,Modify position for symbol BINANCE:BTCUSDT.P with SL 66160.4
+2024-03-05 00:45:58,Order 1205388836 successfully placed
+2024-03-05 00:45:58,Modify position for symbol BINANCE:BTCUSDT.P with SL 66119.9
+2024-03-05 00:45:49,Order 1205388374 for symbol BINANCE:BTCUSDT.P has been executed at price 66524.7 for 1.367 shares
+2024-03-05 00:45:49,Order 1205388374 successfully placed
+2024-03-05 00:45:49,Call to place market order to buy 1.367 shares of symbol BINANCE:BTCUSDT.P 
+2024-03-04 22:52:50,Order 1204803467 for symbol FOREXCOM:EURUSD has been executed at price 1.08606 for 800000 shares
+2024-03-04 22:52:50,Order 1204802849 successfully cancelled
+2024-03-04 22:29:04,Order 1204813462 for symbol BINANCE:BTCUSDT.P has been executed at price 65437.3 for 1.349 shares
+2024-03-04 22:29:04,Order 1204813731 successfully cancelled
+2024-03-04 22:02:11,Order 1204813731 successfully placed
+2024-03-04 22:02:11,Order 1204813462 modification confirmed
+2024-03-04 22:02:11,Modify position for symbol BINANCE:BTCUSDT.P with SL 65437.6 and TP 64362.2
+2024-03-04 22:02:06,Order 1204813462 successfully placed
+2024-03-04 22:02:06,Modify position for symbol BINANCE:BTCUSDT.P with SL 65437.6
+2024-03-04 22:01:48,Order 1204812511 for symbol BINANCE:BTCUSDT.P has been executed at price 65078.2 for 1.349 shares
+2024-03-04 22:01:48,Order 1204812511 successfully placed
+2024-03-04 22:01:48,Call to place market order to sell 1.349 shares of symbol BINANCE:BTCUSDT.P 
+2024-03-04 21:58:45,Order 1204803467 successfully placed
+2024-03-04 21:58:45,Order 1204802849 modification confirmed
+2024-03-04 21:58:45,Modify position for symbol FOREXCOM:EURUSD with SL 1.08429 and TP 1.08606
+2024-03-04 21:58:31,Order 1204802849 successfully placed
+2024-03-04 21:58:31,Modify position for symbol FOREXCOM:EURUSD with SL 1.08429
+2024-03-04 21:58:26,Order 1204802580 for symbol FOREXCOM:EURUSD has been executed at price 1.08488 for 800000 shares
+2024-03-04 21:58:26,Order 1204802580 successfully placed
+2024-03-04 21:58:26,Call to place market order to buy 800000 shares of symbol FOREXCOM:EURUSD 
+2024-03-02 04:28:54,Order 1201417810 for symbol BINANCE:BTCUSDT.P has been executed at price 62555.1 for 1.35 shares
+2024-03-02 04:28:54,Order 1201418503 successfully cancelled
+2024-03-02 03:12:00,Order 1201418503 successfully placed
+2024-03-02 03:12:00,Order 1201417810 modification confirmed
+2024-03-02 03:12:00,Modify position for symbol BINANCE:BTCUSDT.P with SL 62559.4 and TP 61479.8
+2024-03-02 03:11:43,Order 1201417810 successfully placed
+2024-03-02 03:11:43,Modify position for symbol BINANCE:BTCUSDT.P with SL 62559.4
+2024-03-02 03:11:33,Order 1201417526 for symbol BINANCE:BTCUSDT.P has been executed at price 62210.0 for 1.35 shares
+2024-03-02 03:11:33,Order 1201417526 successfully placed
+2024-03-02 03:11:33,Call to place market order to sell 1.35 shares of symbol BINANCE:BTCUSDT.P 
+2024-03-01 18:12:11,Order 1200033399 for symbol FOREXCOM:EURUSD has been executed at price 1.08096 for 800000 shares
+2024-03-01 18:12:11,Order 1200033515 successfully cancelled
+2024-03-01 17:56:39,Order 1200033515 successfully placed
+2024-03-01 17:56:39,Order 1200033399 modification confirmed
+2024-03-01 17:56:39,Modify position for symbol FOREXCOM:EURUSD with SL 1.08096 and TP 1.08309
+2024-03-01 17:56:34,Order 1200033399 successfully placed
+2024-03-01 17:56:34,Modify position for symbol FOREXCOM:EURUSD with SL 1.08096
+2024-03-01 17:56:02,Order 1200032589 for symbol FOREXCOM:EURUSD has been executed at price 1.08163 for 800000 shares
+2024-03-01 17:56:02,Order 1200032589 successfully placed
+2024-03-01 17:56:02,Call to place market order to buy 800000 shares of symbol FOREXCOM:EURUSD 
+2024-03-01 00:40:17,Order 1198422539 for symbol BINANCE:BTCUSDT.P has been executed at price 61930.9 for 1 shares
+2024-03-01 00:40:17,Order 1198421463 successfully cancelled
+2024-02-29 22:52:34,Order 1198422539 modification confirmed
+2024-02-29 22:52:34,Order 1198421463 modification confirmed
+2024-02-29 22:52:34,Modify position for symbol BINANCE:BTCUSDT.P with SL 63458.4 and TP 61954.6
+2024-02-29 22:46:42,Order 1198422539 successfully placed
+2024-02-29 22:46:42,Order 1198421463 modification confirmed
+2024-02-29 22:46:42,Modify position for symbol BINANCE:BTCUSDT.P with SL 63458.4 and TP 61964.7
+2024-02-29 22:46:27,Order 1198421463 successfully placed
+2024-02-29 22:46:27,Modify position for symbol BINANCE:BTCUSDT.P with SL 63458.4
+2024-02-29 22:46:22,Order 1198421139 for symbol BINANCE:BTCUSDT.P has been executed at price 62958.8 for 1 shares
+2024-02-29 22:46:22,Order 1198421139 successfully placed
+2024-02-29 22:46:22,Call to place market order to sell 1 shares of symbol BINANCE:BTCUSDT.P 
+2024-02-28 22:37:04,Order 1196183770 for symbol FOREXCOM:EURUSD has been executed at price 1.08249 for 600000 shares
+2024-02-28 22:37:04,Order 1196049125 successfully cancelled
+2024-02-28 22:37:04,Order 1196047267 successfully cancelled
+2024-02-28 22:37:04,Order 1196183770 successfully placed
+2024-02-28 22:37:04,Call to place market order to sell 600000 shares of symbol FOREXCOM:EURUSD 
+2024-02-28 21:48:37,Order 1196049125 modification confirmed
+2024-02-28 21:48:37,Order 1196047267 modification confirmed
+2024-02-28 21:48:36,Modify position for symbol FOREXCOM:EURUSD with SL 1.08139 and TP 1.08414
+2024-02-28 21:48:16,Order 1196049125 modification confirmed
+2024-02-28 21:48:16,Order 1196047267 modification confirmed
+2024-02-28 21:48:16,Modify position for symbol FOREXCOM:EURUSD with SL 1.08137 and TP 1.08414
+2024-02-28 21:47:58,Order 1196049125 successfully placed
+2024-02-28 21:47:58,Order 1196047267 modification confirmed
+2024-02-28 21:47:58,Modify position for symbol FOREXCOM:EURUSD with SL 1.08137 and TP 1.08391
+2024-02-28 21:47:13,Order 1196047267 successfully placed
+2024-02-28 21:47:13,Modify position for symbol FOREXCOM:EURUSD with SL 1.08137
+2024-02-28 21:47:04,Order 1196046877 for symbol FOREXCOM:EURUSD has been executed at price 1.08230 for 600000 shares
+2024-02-28 21:47:04,Order 1196046877 successfully placed
+2024-02-28 21:47:04,Call to place market order to buy 600000 shares of symbol FOREXCOM:EURUSD 
+2024-02-28 18:54:34,Order 1195700401 successfully cancelled
+2024-02-28 18:54:34,Order 1195700499 successfully cancelled
+2024-02-28 18:54:34,Order 1195700160 successfully cancelled
+2024-02-28 18:03:53,Order 1195700499 successfully placed
+2024-02-28 18:03:53,Order 1195700160 modification confirmed
+2024-02-28 18:03:53,"Modified order 1195700160 for symbol FOREXCOM:EURUSD with price 1.08039, qty 600000 with SL 1.07966 and TP 1.08183"
+2024-02-28 18:03:49,Order 1195700401 successfully placed
+2024-02-28 18:03:49,Order 1195700160 modification confirmed
+2024-02-28 18:03:49,"Modified order 1195700160 for symbol FOREXCOM:EURUSD with price 1.08039, qty 600000 with SL 1.07966"
+2024-02-28 18:03:40,Order 1195700160 successfully placed
+2024-02-28 18:03:40,Call to place limit order to buy 600000 shares of symbol FOREXCOM:EURUSD at price 1.08039 
+2024-02-27 23:22:34,Order 1194193272 for symbol BINANCE:BTCUSDT.P has been executed at price 57335.0 for 2 shares
+2024-02-27 23:22:34,Order 1194194628 successfully cancelled
+2024-02-27 22:55:06,Order 1194194628 modification confirmed
+2024-02-27 22:55:06,Order 1194193272 modification confirmed
+2024-02-27 22:55:06,Modify position for symbol BINANCE:BTCUSDT.P with SL 57336.3 and TP 55906.8
+2024-02-27 22:54:55,Order 1194194628 modification confirmed
+2024-02-27 22:54:55,Order 1194193272 modification confirmed
+2024-02-27 22:54:55,Modify position for symbol BINANCE:BTCUSDT.P with SL 57336.3 and TP 55597.9
+2024-02-27 22:54:41,Order 1194219876 for symbol BINANCE:BTCUSDT.P has been executed at price 57017.0 for 1 shares
+2024-02-27 22:54:41,Order 1194219876 successfully placed
+2024-02-27 22:54:41,Call to place market order to sell 1 shares of symbol BINANCE:BTCUSDT.P 
+2024-02-27 22:54:17,Order 1194194628 modification confirmed
+2024-02-27 22:54:17,Order 1194193272 modification confirmed
+2024-02-27 22:54:17,Modify position for symbol BINANCE:BTCUSDT.P with SL 57163.1 and TP 55597.9
+2024-02-27 22:47:42,Order 1194194628 successfully placed
+2024-02-27 22:47:42,Order 1194193272 modification confirmed
+2024-02-27 22:47:42,Modify position for symbol BINANCE:BTCUSDT.P with SL 57148.9 and TP 55597.9
+2024-02-27 22:47:22,Order 1194193272 successfully placed
+2024-02-27 22:47:22,Modify position for symbol BINANCE:BTCUSDT.P with SL 57148.9
+2024-02-27 22:46:50,Order 1194190677 for symbol BINANCE:BTCUSDT.P has been executed at price 56700.0 for 1 shares
+2024-02-27 22:46:50,Order 1194190677 successfully placed
+2024-02-27 22:46:50,Call to place market order to sell 1 shares of symbol BINANCE:BTCUSDT.P 
+2024-02-27 21:38:31,Order 1193808279 for symbol FOREXCOM:EURUSD has been executed at price 1.08478 for 650000 shares
+2024-02-27 21:38:31,Order 1193808460 successfully cancelled
+2024-02-27 19:32:21,Order 1193808460 modification confirmed
+2024-02-27 19:32:21,Order 1193808279 modification confirmed
+2024-02-27 19:32:21,Modify position for symbol FOREXCOM:EURUSD with SL 1.08479 and TP 1.08686
+2024-02-27 19:32:10,Order 1193808460 successfully placed
+2024-02-27 19:32:10,Order 1193808279 modification confirmed
+2024-02-27 19:32:10,Modify position for symbol FOREXCOM:EURUSD with SL 1.08479 and TP 1.08699
+2024-02-27 19:32:00,Order 1193808279 successfully placed
+2024-02-27 19:32:00,Modify position for symbol FOREXCOM:EURUSD with SL 1.08479
+2024-02-27 19:31:48,Order 1193808080 for symbol FOREXCOM:EURUSD has been executed at price 1.08548 for 650000 shares
+2024-02-27 19:31:48,Order 1193808080 successfully placed
+2024-02-27 19:31:48,Call to place market order to buy 650000 shares of symbol FOREXCOM:EURUSD 
+2024-02-27 17:32:21,Order 1193563465 for symbol FOREXCOM:EURUSD has been executed at price 1.08529 for 800000 shares
+2024-02-27 17:32:21,Order 1193563667 successfully cancelled
+2024-02-27 16:26:24,Order 1193563667 modification confirmed
+2024-02-27 16:26:24,Order 1193563465 modification confirmed
+2024-02-27 16:26:24,Modify position for symbol FOREXCOM:EURUSD with SL 1.08529 and TP 1.08734
+2024-02-27 16:25:48,Order 1193563667 successfully placed
+2024-02-27 16:25:48,Order 1193563465 modification confirmed
+2024-02-27 16:25:48,Modify position for symbol FOREXCOM:EURUSD with SL 1.08529 and TP 1.08716
+2024-02-27 16:25:41,Order 1193563465 successfully placed
+2024-02-27 16:25:41,Modify position for symbol FOREXCOM:EURUSD with SL 1.08529
+2024-02-27 16:25:37,Order 1193563315 for symbol FOREXCOM:EURUSD has been executed at price 1.08598 for 800000 shares
+2024-02-27 16:25:37,Order 1193563315 successfully placed
+2024-02-27 16:25:36,Call to place market order to buy 800000 shares of symbol FOREXCOM:EURUSD 
+2024-02-21 21:02:25,Order 1184784000 for symbol FOREXCOM:EURUSD has been executed at price 1.08069 for 1100000 shares
+2024-02-21 21:02:25,Order 1184783861 successfully cancelled
+2024-02-21 19:58:44,Order 1184784000 successfully placed
+2024-02-21 19:58:44,Order 1184783861 modification confirmed
+2024-02-21 19:58:44,Modify position for symbol FOREXCOM:EURUSD with SL 1.07943 and TP 1.08069
+2024-02-21 19:58:37,Order 1184783861 successfully placed
+2024-02-21 19:58:37,Modify position for symbol FOREXCOM:EURUSD with SL 1.07943
+2024-02-21 19:58:29,Order 1184783667 for symbol FOREXCOM:EURUSD has been executed at price 1.07985 for 1100000 shares
+2024-02-21 19:58:29,Order 1184783667 successfully placed
+2024-02-21 19:58:29,Call to place market order to buy 1100000 shares of symbol FOREXCOM:EURUSD 

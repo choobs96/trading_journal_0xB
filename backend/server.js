@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url'; // To get the current directory in ES modul
 import { dirname } from 'path'; // To join the path correctly
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import data from './data.js'; // Correct relative path
+
 
 const app = express();
 const port = 5001;
@@ -29,6 +31,7 @@ app.use(express.json());
 app.use(fileUpload()); // Enable file upload handling
 
 // Middleware to check JWT
+// Middleware to authenticate the JWT token
 const authenticateToken = (req, res, next) => {
   const token = req.header('Authorization') && req.header('Authorization').split(' ')[1]; // Get token from header
 
@@ -36,14 +39,15 @@ const authenticateToken = (req, res, next) => {
     return res.status(403).send('Access Denied: No token provided');
   }
 
-  jwt.verify(token, 'your_secret_key', (err, user) => {
+  jwt.verify(token, 'test_secret_key', (err, user) => {
     if (err) {
       return res.status(403).send('Invalid token');
     }
-    req.user = user; // Add the user info to the request
+    req.user = user; // Add user info to the request object
     next();
   });
 };
+
 
 // User Login Route
 app.post('/api/login', async (req, res) => {
@@ -58,11 +62,16 @@ app.post('/api/login', async (req, res) => {
   if (!isMatch) return res.status(400).send('Invalid credentials');
 
   // Create and sign the JWT token
-  const token = jwt.sign({ id: user.id, email: user.email }, 'your_secret_key', {
+  const token = jwt.sign({ id: user.id, email: user.email }, 'test_secret_key', {
     expiresIn: '1h',
   });
 
   res.json({ token });
+});
+
+// New API endpoint to serve data from data.js
+app.get('/api/data', authenticateToken, (req, res) => {
+  res.json(data); // Send the data from the data.js file
 });
 
 // Protected upload route
