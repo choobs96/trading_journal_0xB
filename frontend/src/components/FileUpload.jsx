@@ -8,8 +8,21 @@ export default function FileUpload({ onUploadClose }) {
 
   // Handle file drop
   const handleDrop = (acceptedFiles) => {
+    // Limit to only 2 files
+    if (files.length + acceptedFiles.length > 2) {
+      alert('You can only upload up to 2 files.');
+      return;
+    }
+
+    // Only allow CSV files
+    const validFiles = acceptedFiles.filter((file) => file.type === 'text/csv');
+    if (validFiles.length !== acceptedFiles.length) {
+      alert('Only CSV files are allowed.');
+      return;
+    }
+
     // Create file objects with a placeholder label
-    const newFiles = acceptedFiles.map((file) => ({
+    const newFiles = validFiles.map((file) => ({
       file: file,
       label: '', // Initially empty, user will assign label later
     }));
