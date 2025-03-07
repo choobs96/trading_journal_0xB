@@ -115,6 +115,27 @@ function App() {
         events={events}
         eventClick={handleEventClick}
         height="800px"
+        eventDidMount={(info) => {
+          // Apply custom styles to the event element
+          info.el.style.backgroundColor = info.event.backgroundColor;
+          info.el.style.borderColor = info.event.borderColor;
+          info.el.style.color = info.event.textColor;
+          // Ensure the event fills the entire day cell
+          info.el.style.margin = '0';
+          info.el.style.padding = '0';
+          info.el.style.height = '100%';
+          const description = info.event.extendedProps.description;
+
+          const descriptionElement = document.createElement('div');
+          descriptionElement.textContent = description;
+          descriptionElement.style.fontSize = '10px'; // Smaller font for the description
+          descriptionElement.style.marginTop = '5px'; // Add some space between title and description
+          info.el.appendChild(descriptionElement); // Append description to the event element
+          const dayFrame = info.el.closest('.fc-daygrid-day-frame.fc-scrollgrid-sync-inner');
+          if (dayFrame) {
+            dayFrame.style.backgroundColor = info.event.backgroundColor; // Set the background color of the day frame
+          }
+        }}
       />
     );
   };
