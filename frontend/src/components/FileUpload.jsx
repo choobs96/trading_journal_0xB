@@ -48,7 +48,9 @@ export default function FileUpload({ onUploadClose }) {
     e.preventDefault();
 
     // Retrieve token from localStorage (or sessionStorage)
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('auth_token'); // Correct key
+
+    console.log('Token from localStorage:', token);
 
     if (!token) {
       alert('No token found, please log in.');
