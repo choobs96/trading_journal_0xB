@@ -4,6 +4,8 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url'; // To get the current directory in ES modules
 import { dirname } from 'path'; // To join the path correctly
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const app = express();
 const port = 5001;
@@ -12,14 +14,60 @@ const port = 5001;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Sample user data (ensure the password is hashed)
+const users = [
+  {
+    id: 1,
+    email: 'user@example.com',
+    password: '$2b$10$DHV/w1YQDKitmxTOMOhwTOZfAUmkdPB5Tz/376Ls9d8qS/IxUCPgO' // hashed password: "password123"
+  }
+];
+
 // Middleware setup
 app.use(cors()); // Enable CORS for all requests
 app.use(express.json());
 app.use(fileUpload()); // Enable file upload handling
 
-// Upload route
-app.post('/api/upload', (req, res) => {
-  // Check if a file is uploaded
+// Middleware to check JWT
+const authenticateToken = (req, res, next) => {
+  const token = req.header('Authorization') && req.header('Authorization').split(' ')[1]; // Get token from header
+
+  if (!token) {
+    return res.status(403).send('Access Denied: No token provided');
+  }
+
+  jwt.verify(token, 'your_secret_key', (err, user) => {
+    if (err) {
+      return res.status(403).send('Invalid token');
+    }
+    req.user = user; // Add the user info to the request
+    next();
+  });
+};
+
+// User Login Route
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  // Check if user exists
+  const user = users.find((user) => user.email === email);
+  if (!user) return res.status(400).send('Invalid credentials');
+
+  // Compare password with hashed password in DB
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) return res.status(400).send('Invalid credentials');
+
+  // Create and sign the JWT token
+  const token = jwt.sign({ id: user.id, email: user.email }, 'your_secret_key', {
+    expiresIn: '1h',
+  });
+
+  res.json({ token });
+});
+
+// Protected upload route
+app.post('/api/upload', authenticateToken, (req, res) => {
+  // File upload logic
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
