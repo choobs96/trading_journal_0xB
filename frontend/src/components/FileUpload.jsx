@@ -42,22 +42,27 @@ export default function FileUpload({ onUploadClose }) {
       return;
     }
 
-    for (const fileObj of files) {
-      const formData = new FormData();
-      formData.append('file', fileObj.file);
-      formData.append('label', selectedLabels[files.indexOf(fileObj)]);
+    try {
+      // Loop through the files, uploading each one
+      for (const fileObj of files) {
+        const formData = new FormData();
+        formData.append('file', fileObj.file);
+        formData.append('label', selectedLabels[files.indexOf(fileObj)]);
 
-      try {
         const response = await axios.post('http://localhost:5001/api/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`, // Attach token here
           },
         });
+
         console.log('File uploaded successfully:', response.data);
-      } catch (error) {
-        console.error('Error uploading file:', error);
       }
+
+      // After all files are uploaded, close the form
+      onUploadClose(); // Close the upload form
+    } catch (error) {
+      console.error('Error uploading file:', error);
     }
   };
 
