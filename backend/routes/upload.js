@@ -1,53 +1,102 @@
 import express from 'express';
-import fileUpload from 'express-fileupload'; // File upload middleware
+import fileUpload from 'express-fileupload';
 import path from 'path';
-import { fileURLToPath } from 'url'; // To get the current directory in ES modules
-import { dirname } from 'path'; // To join the path correctly
-import jwt from 'jsonwebtoken'; // For JWT verification
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import jwt from 'jsonwebtoken';
+import processTrades from './processTrades.js'; // Import processTrades function
 
 const router = express.Router();
-
-// Use fileURLToPath to get the directory name
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Enable file upload middleware
+router.use(fileUpload());
+
 // Middleware to check JWT
 const authenticateToken = (req, res, next) => {
-  const token = req.header('Authorization') && req.header('Authorization').split(' ')[1]; // Get token from header
+  const token = req.header('Authorization')?.split(' ')[1];
 
   if (!token) {
-    return res.status(403).send('Access Denied: No token provided');
+    return res.status(403).json({ success: false, message: 'Access Denied: No token provided' });
   }
 
-  jwt.verify(token, 'your_secret_key', (err, user) => {
+  jwt.verify(token, 'test_secret_key', (err, user) => {
     if (err) {
-      return res.status(403).send('Invalid token');
+      return res.status(403).json({ success: false, message: 'Invalid token' });
     }
-    req.user = user; // Add the user info to the request
+    req.user = user;
     next();
   });
 };
 
 // POST route for file upload
-router.post('/upload', authenticateToken, (req, res) => {
-  // Check if the file is uploaded
+router.post('/upload', authenticateToken, async (req, res) => {
+  console.log('✅ Uploading process started...');
+
   if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
+    return res.status(400).json({ success: false, message: 'No files were uploaded.' });
   }
 
-  // Get the uploaded file from the request
-  const uploadedFile = req.files.file;
+  console.log('✅ Files received:', req.files);
 
-  // Define the upload path
-  const uploadPath = path.join(__dirname, 'uploads', uploadedFile.name);
+  const uploadDir = path.join(__dirname, 'uploads');
+  let historyPath = null;
+  let positionsPath = null;
 
-  // Move the uploaded file to the 'uploads' folder
-  uploadedFile.mv(uploadPath, (err) => {
-    if (err) {
-      return res.status(500).send(err);
+  try {
+    const uploadedFiles = Array.isArray(req.files.file) ? req.files.file : [req.files.file];
+
+    await Promise.all(
+      uploadedFiles.map((file) => {
+        if (!file || !file.name) {
+          console.error('❌ Error: File is missing a name.');
+          return res.status(400).json({ success: false, message: 'Invalid file uploaded.' });
+        }
+
+        const filePath = path.join(uploadDir, file.name);
+        const fileNameLower = file.name.toLowerCase();
+
+        return new Promise((resolve, reject) => {
+          file.mv(filePath, (err) => {
+            if (err) return reject(err);
+
+            console.log(`✅ Uploaded: ${file.name}`);
+
+            if (fileNameLower.includes('history.csv')) {
+              historyPath = filePath;
+            } else if (fileNameLower.includes('positions.csv')) {
+              positionsPath = filePath;
+            }
+
+            resolve();
+          });
+        });
+      })
+    );
+
+    console.log(`🛠️ Final Check: History Path: ${historyPath}, Positions Path: ${positionsPath}`);
+
+    // Ensure both files exist before running processTrades
+    if (!historyPath || !positionsPath) {
+      return res.status(400).json({
+        success: false,
+        message: 'Both History.csv and Positions.csv must be uploaded.',
+      });
     }
-    res.send('File uploaded successfully!');
-  });
+
+    console.log('⚡ Running processTrades...');
+    await processTrades(historyPath, positionsPath);
+    console.log('✅ processTrades completed successfully!');
+
+    return res.status(200).json({
+      success: true,
+      message: 'Files uploaded and processed successfully!',
+    });
+  } catch (error) {
+    console.error('❌ File upload error:', error);
+    return res.status(500).json({ success: false, message: 'Error uploading files.', error: error.message });
+  }
 });
 
 export default router;
