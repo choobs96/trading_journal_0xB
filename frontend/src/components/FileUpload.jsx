@@ -5,6 +5,7 @@ import axios from 'axios';
 export default function FileUpload({ onUploadClose }) {
   const [files, setFiles] = useState([]);
   const [selectedLabels, setSelectedLabels] = useState({}); // Store labels for each file
+  const [uploadStatus, setUploadStatus] = useState(null);
 
   // Handle file drop
   const handleDrop = (acceptedFiles) => {
@@ -22,18 +23,18 @@ export default function FileUpload({ onUploadClose }) {
     }
 
     // Create file objects with a placeholder label
-    const newFiles = validFiles.map((file) => ({
-      file: file,
-      label: '', // Initially empty, user will assign label later
-    }));
+    const newFiles = validFiles.filter(
+      (file) => !files.some((existingFile) => existingFile.name === file.name)
+    );
+
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   };
 
   // Handle label change (user selects a label for the file)
-  const handleLabelChange = (index, label) => {
+  const handleLabelChange = (fileName, label) => {
     setSelectedLabels((prevLabels) => ({
       ...prevLabels,
-      [index]: label,
+      [fileName]: label,
     }));
   };
 
@@ -47,37 +48,51 @@ export default function FileUpload({ onUploadClose }) {
   const handleFileUpload = async (e) => {
     e.preventDefault();
 
-    // Retrieve token from localStorage (or sessionStorage)
-    const token = localStorage.getItem('auth_token'); // Correct key
+    if (files.length !== 2) {
+      alert('You must upload exactly 2 files: History.csv and Positions.csv.');
+      return;
+    }
 
-    console.log('Token from localStorage:', token);
+    if (!selectedLabels[files[0].name] || !selectedLabels[files[1].name]) {
+      alert('Please assign labels to both files before uploading.');
+      return;
+    }
 
+    const labels = Object.values(selectedLabels);
+    if (!labels.includes('History.csv') || !labels.includes('Positions.csv')) {
+      alert('You must assign one file as History.csv and the other as Positions.csv.');
+      return;
+    }
+
+    const token = localStorage.getItem('auth_token');
     if (!token) {
       alert('No token found, please log in.');
       return;
     }
 
     try {
-      // Loop through the files, uploading each one
-      for (const fileObj of files) {
-        const formData = new FormData();
-        formData.append('file', fileObj.file);
-        formData.append('label', selectedLabels[files.indexOf(fileObj)]);
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append('file', file);
+        formData.append('label', selectedLabels[file.name]);
+      });
 
-        const response = await axios.post('http://localhost:5001/api/upload', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`, // Attach token here
-          },
-        });
+      const response = await axios.post('http://localhost:5001/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        console.log('File uploaded successfully:', response.data);
-      }
-
-      // After all files are uploaded, close the form
-      onUploadClose(); // Close the upload form
+      setUploadStatus({ success: response.data.success, message: response.data.message });
+      alert(response.data.message);
+      onUploadClose();
     } catch (error) {
-      console.error('Error uploading file:', error);
+      setUploadStatus({
+        success: false,
+        message: error.response?.data?.message || 'Upload failed. Please try again.',
+      });
+      alert(error.response?.data?.message || 'Error uploading file.');
     }
   };
 
@@ -114,15 +129,15 @@ export default function FileUpload({ onUploadClose }) {
         {/* Display uploaded files with label selection */}
         <div>
           <h3>Uploaded Files:</h3>
-          {files.map((fileObj, index) => (
-            <div key={index} style={{ marginBottom: '10px' }}>
-              <strong>{fileObj.file.name}</strong> ({fileObj.file.size} bytes)
+          {files.map((file) => (
+            <div key={file.name} style={{ marginBottom: '10px' }}>
+              <strong>{file.name}</strong> ({file.size} bytes)
               {/* Label selection for each file */}
               <div style={{ marginTop: '10px' }}>
                 <label>Select Label: </label>
                 <select
-                  onChange={(e) => handleLabelChange(index, e.target.value)}
-                  value={selectedLabels[index] || ''}
+                  onChange={(e) => handleLabelChange(file.name, e.target.value)}
+                  value={selectedLabels[file.name] || ''}
                 >
                   <option value="">Select Label</option>
                   <option value="History.csv">History</option>
@@ -137,9 +152,9 @@ export default function FileUpload({ onUploadClose }) {
         <div style={{ marginTop: '20px' }}>
           <h4>File Labels:</h4>
           <ul>
-            {files.map((fileObj, index) => (
-              <li key={index}>
-                {fileObj.file.name} - {selectedLabels[index] || 'No label assigned'}
+            {files.map((file) => (
+              <li key={file.name}>
+                {file.name} - {selectedLabels[file.name] || 'No label assigned'}
               </li>
             ))}
           </ul>
@@ -147,6 +162,11 @@ export default function FileUpload({ onUploadClose }) {
         <button type="submit" className="submit-btn" onClick={handleFileUpload}>
           Upload File
         </button>
+
+        {/* Upload status */}
+        {uploadStatus && (
+          <p style={{ color: uploadStatus.success ? 'green' : 'red' }}>{uploadStatus.message}</p>
+        )}
       </div>
     </div>
   );

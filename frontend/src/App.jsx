@@ -46,7 +46,8 @@ function App() {
         })
         .then((response) => {
           console.log('Fetched data:', response);
-          setData(response.data); // Set the fetched data
+          setData(response.data.data); // Set the fetched data
+          console.log(data);
         })
         .catch((error) => {
           console.error('Error fetching data:', error.response || error.message);
