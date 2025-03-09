@@ -29,7 +29,7 @@ export default function TradeCards({ trade, onClose }) {
         </div>
         <div className="trade-content">
           <p>
-            <strong>Trade ID:</strong> {trade.tradeid}
+            <strong>Trade ID:</strong> {trade.trade_id}
           </p>
           <p>
             <strong>Symbol:</strong> {trade.symbol}

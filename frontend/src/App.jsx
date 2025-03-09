@@ -23,6 +23,7 @@ function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const [token, setToken] = useState(localStorage.getItem('auth_token') || null); // Use the token from localStorage
   const [data, setData] = useState(null); // State to store data from backend
+  const [aggData, setAggData] = useState(null); // State to store agg data from backend
 
   // Check authentication on app load
   useEffect(() => {
@@ -55,6 +56,26 @@ function App() {
     }
   }, [authenticated, token]); // Fetch data whenever authenticated or token changes
 
+  // Fetch agg data from backend when authenticated
+  useEffect(() => {
+    if (authenticated && token) {
+      axios
+        .get('http://localhost:5001/api/agg_daily_data', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+          },
+        })
+        .then((response) => {
+          console.log('Fetched data:', response);
+          setAggData(response.data.data); // Set the fetched data
+          console.log('this is get agg data from db', response.data.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching agg data:', error.response || error.message);
+        });
+    }
+  }, [authenticated, token]); // Fetch data whenever authenticated or token changes
+
   // Handle login
   const handleLogin = async (response) => {
     setAuthenticated(true); // Set user as authenticated
@@ -83,15 +104,18 @@ function App() {
   }
 
   // Calendar rendering logic
-  const TradeCalendar = ({ trades }) => {
+  const TradeCalendar = ({ trades = [] }) => {
+    if (!trades || trades.length === 0) {
+      return <p>Loading trades or no data available...</p>; // Handle empty state gracefully
+    }
     const events = trades.map((trade) => {
-      const isWin = trade.totalPNL > 0;
-      const eventTitle = `$${trade.totalPNL} | ${trade.totalTrades} Trades`;
-      const eventDescription = `RR: ${trade.averageRR}\nWR: ${trade.winRate}%`;
+      const isWin = trade.total_pnl > 0;
+      const eventTitle = `$${trade.total_pnl} | ${trade.total_trades} Trades`;
+      const eventDescription = `RR: ${trade.total_rr}\nWR: ${trade.win_rate}%`;
 
       return {
         title: eventTitle,
-        start: trade.date,
+        start: trade.trade_date,
         backgroundColor: isWin ? '#d5f4ec' : '#f8c2bd',
         borderColor: isWin ? '#d5f4ec' : '#f8c2bd',
         textColor: 'black',
@@ -105,7 +129,7 @@ function App() {
 
     const handleEventClick = ({ event }) => {
       alert(
-        `PNL: ${event.extendedProps.totalPNL}\nTotal Trades: ${event.extendedProps.totalTrades}\nAverage RR: ${event.extendedProps.averageRR}\nWin Rate: ${event.extendedProps.winRate}`
+        `PNL: ${event.extendedProps.total_pnl}\nTotal Trades: ${event.extendedProps.total_trades}\nAverage RR: ${event.extendedProps.total_rr}\nWin Rate: ${event.extendedProps.win_rate}`
       );
     };
 
@@ -162,7 +186,11 @@ function App() {
             {data ? (
               <>
                 <Table tradedata={data} />
-                <TradeCalendar trades={aggregatedData} />
+                {aggData && aggData.length > 0 ? (
+                  <TradeCalendar trades={aggData} />
+                ) : (
+                  <p>No trade data available</p>
+                )}
               </>
             ) : (
               <p>Loading data...</p>

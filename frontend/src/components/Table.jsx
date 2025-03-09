@@ -12,7 +12,7 @@ export default function Table({ tradedata }) {
   // Function for handling row click
   function clickHandler(tradeInput) {
     setSelectedTrade(tradeInput);
-    if (selectedTrade && selectedTrade.id === tradeInput.id) {
+    if (selectedTrade && selectedTrade.trade_id === tradeInput.trade_id) {
       setToggleTrades((prev) => !prev); // Toggle visibility if the same trade is clicked
     } else {
       setSelectedTrade(tradeInput);

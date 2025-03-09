@@ -39,7 +39,7 @@ const authenticateToken = (req, res, next) => {
     }
 
     req.user = user;
-	console.log(req.user) // ✅ Attach `user_id` to request
+    console.log(req.user); // ✅ Attach `user_id` to request
     next();
   });
 };
@@ -51,7 +51,9 @@ app.post('/api/login', async (req, res) => {
 
   try {
     // ✅ Use parameterized query to fetch user by email
-    const user = await db.query(`SELECT user_id, email, password FROM users WHERE email = $1;`, [email]);
+    const user = await db.query(`SELECT user_id, email, password FROM users WHERE email = $1;`, [
+      email,
+    ]);
 
     if (user.rows.length === 0) {
       console.warn('❌ Login failed: Invalid credentials');
@@ -97,6 +99,44 @@ app.get('/api/data', authenticateToken, async (req, res) => {
   }
 });
 
+app.get('/api/agg_daily_data', authenticateToken, async (req, res) => {
+  console.log(`📊 Fetching daily stats for user_id: ${req.user.user_id}...`);
+
+  try {
+    const trades = await db.query(
+      `SELECT 
+            DATE(time_of_last_exit) AS trade_date,
+            COUNT(*) AS total_trades,
+            ROUND(COALESCE(SUM(pnl), 0), 2) AS total_pnl,
+            ROUND(COALESCE(
+                CASE 
+                    WHEN COUNT(*) = 0 THEN NULL
+                    ELSE SUM(CASE WHEN pnl > 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)
+                END, 0), 2
+            ) AS win_rate,
+            ROUND(COALESCE(
+                CASE 
+                    WHEN SUM(CASE WHEN pnl < 0 THEN ABS(pnl) ELSE 0 END) = 0 THEN NULL
+                    ELSE SUM(CASE WHEN pnl > 0 THEN pnl ELSE 0 END) / NULLIF(SUM(CASE WHEN pnl < 0 THEN ABS(pnl) ELSE 0 END), 0)
+                END, 0), 2
+            ) AS total_rr
+        FROM trades 
+        WHERE user_id = $1
+        GROUP BY trade_date
+        ORDER BY trade_date;
+
+
+      `,
+      [req.user.user_id]
+    );
+
+    res.json({ success: true, data: trades.rows });
+  } catch (error) {
+    console.error('❌ Error fetching agg stats:', error);
+    res.status(500).json({ success: false, message: 'Error fetching agg stats' });
+  }
+});
+
 // **Get Trade Accounts for the Logged-in User**
 app.get('/api/trade-accounts', authenticateToken, async (req, res) => {
   console.log(`📂 Fetching trade accounts for user_id: ${req.user.user_id}...`);
@@ -111,7 +151,6 @@ app.get('/api/trade-accounts', authenticateToken, async (req, res) => {
       success: true,
       tradeAccounts: tradeAccounts.rows.map((row) => row.trade_account), // Extract trade account names
     });
-
   } catch (error) {
     console.error('❌ Error fetching trade accounts:', error);
     res.status(500).json({ success: false, message: 'Error fetching trade accounts' });
@@ -178,7 +217,7 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
     console.log(`📂 Positions Path: ${positionsPath}`);
 
     // ✅ Extract user ID from the authenticated request
-    const user_id = req.user?.user_id;  // 🛠 Ensure `user_id` is retrieved correctly
+    const user_id = req.user?.user_id; // 🛠 Ensure `user_id` is retrieved correctly
     const { trade_account } = req.body;
 
     if (!user_id) {
@@ -200,10 +239,11 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
       success: true,
       message: 'Files uploaded and processed successfully!',
     });
-
   } catch (error) {
     console.error('❌ Upload error:', error);
-    return res.status(500).json({ success: false, message: 'Error uploading files.', error: error.message });
+    return res
+      .status(500)
+      .json({ success: false, message: 'Error uploading files.', error: error.message });
   }
 });
 
