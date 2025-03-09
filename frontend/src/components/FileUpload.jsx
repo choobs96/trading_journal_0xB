@@ -1,36 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 
 export default function FileUpload({ onUploadClose }) {
   const [files, setFiles] = useState([]);
-  const [selectedLabels, setSelectedLabels] = useState({}); // Store labels for each file
+  const [selectedLabels, setSelectedLabels] = useState({});
   const [uploadStatus, setUploadStatus] = useState(null);
+  const [tradeAccounts, setTradeAccounts] = useState([]); // Store trade accounts from DB
+  const [selectedAccount, setSelectedAccount] = useState(''); // Selected trade account
+  const [newAccount, setNewAccount] = useState(''); // Temporarily store new trade account input
 
-  // Handle file drop
-  const handleDrop = (acceptedFiles) => {
-    // Limit to only 2 files
-    if (files.length + acceptedFiles.length > 2) {
-      alert('You can only upload up to 2 files.');
-      return;
+  const token = localStorage.getItem('auth_token'); // Retrieve auth token
+
+  useEffect(() => {
+    fetchTradeAccounts();
+  }, []);
+
+  // ✅ Fetch trade accounts from the backend
+  const fetchTradeAccounts = async () => {
+    try {
+      const response = await axios.get('http://localhost:5001/api/trade-accounts', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTradeAccounts(response.data);
+    } catch (error) {
+      console.error('❌ Error fetching trade accounts:', error);
     }
-
-    // Only allow CSV files
-    const validFiles = acceptedFiles.filter((file) => file.type === 'text/csv');
-    if (validFiles.length !== acceptedFiles.length) {
-      alert('Only CSV files are allowed.');
-      return;
-    }
-
-    // Create file objects with a placeholder label
-    const newFiles = validFiles.filter(
-      (file) => !files.some((existingFile) => existingFile.name === file.name)
-    );
-
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   };
 
-  // Handle label change (user selects a label for the file)
+  // ✅ Handle file drop (using useDropzone)
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      if (files.length + acceptedFiles.length > 2) {
+        alert('⚠️ You can only upload up to 2 files.');
+        return;
+      }
+
+      const validFiles = acceptedFiles.filter((file) => file.type === 'text/csv');
+      if (validFiles.length !== acceptedFiles.length) {
+        alert('⚠️ Only CSV files are allowed.');
+        return;
+      }
+
+      const newFiles = validFiles.filter(
+        (file) => !files.some((existingFile) => existingFile.name === file.name)
+      );
+
+      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    },
+    accept: '.csv',
+  });
+
+  // ✅ Handle label selection
   const handleLabelChange = (fileName, label) => {
     setSelectedLabels((prevLabels) => ({
       ...prevLabels,
@@ -38,35 +59,46 @@ export default function FileUpload({ onUploadClose }) {
     }));
   };
 
-  // Set up React Dropzone
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: handleDrop,
-    accept: '.csv', // Accept only CSV files
-  });
+  // ✅ Handle trade account selection
+  const handleAccountChange = (e) => {
+    const value = e.target.value;
+    if (value === 'new') {
+      setNewAccount('');
+      setSelectedAccount('');
+    } else {
+      setNewAccount('');
+      setSelectedAccount(value);
+    }
+  };
 
-  // Handle file upload to backend
+  // ✅ Handle new trade account input (without adding to DB yet)
+  const handleNewAccountChange = (e) => {
+    setNewAccount(e.target.value);
+  };
+
+  // ✅ Handle file upload
   const handleFileUpload = async (e) => {
     e.preventDefault();
 
     if (files.length !== 2) {
-      alert('You must upload exactly 2 files: History.csv and Positions.csv.');
+      alert('⚠️ You must upload exactly 2 files: History.csv and Positions.csv.');
       return;
     }
 
-    if (!selectedLabels[files[0].name] || !selectedLabels[files[1].name]) {
-      alert('Please assign labels to both files before uploading.');
+    const tradeAccountToUse = newAccount.trim() || selectedAccount;
+    if (!tradeAccountToUse) {
+      alert('⚠️ Please select or enter a trade account.');
       return;
     }
 
     const labels = Object.values(selectedLabels);
     if (!labels.includes('History.csv') || !labels.includes('Positions.csv')) {
-      alert('You must assign one file as History.csv and the other as Positions.csv.');
+      alert('⚠️ You must assign one file as History.csv and the other as Positions.csv.');
       return;
     }
 
-    const token = localStorage.getItem('auth_token');
     if (!token) {
-      alert('No token found, please log in.');
+      alert('⚠️ No token found, please log in.');
       return;
     }
 
@@ -76,6 +108,7 @@ export default function FileUpload({ onUploadClose }) {
         formData.append('file', file);
         formData.append('label', selectedLabels[file.name]);
       });
+      formData.append('trade_account', tradeAccountToUse); // Send the selected or new account
 
       const response = await axios.post('http://localhost:5001/api/upload', formData, {
         headers: {
@@ -95,15 +128,12 @@ export default function FileUpload({ onUploadClose }) {
       alert(error.response?.data?.message || 'Error uploading file.');
     }
   };
-
-  function handleOverlayClick(event) {
-    if (event.target.classList.contains('overlay')) {
-      onUploadClose();
-    }
-  }
-
+  console.log('this is to get trade acc:', tradeAccounts);
   return (
-    <div className="overlay" onClick={handleOverlayClick}>
+    <div
+      className="overlay"
+      onClick={(e) => e.target.classList.contains('overlay') && onUploadClose()}
+    >
       <div className="upload-container">
         <div className="login-header">
           <h1>Upload TradingView Paper Trade Data</h1>
@@ -111,28 +141,58 @@ export default function FileUpload({ onUploadClose }) {
             X
           </button>
         </div>
+
+        {/* ✅ Dropzone for file upload */}
         <div
           {...getRootProps()}
           style={{
             padding: '20px',
             border: '2px dashed #ccc',
-            borderRadius: '5px',
             textAlign: 'center',
             marginBottom: '20px',
           }}
         >
           <input {...getInputProps()} />
-          <p>Download Positions & History data from trading view & Upload here</p>
-          <p>Drag & drop CSV files here, or click to select files</p>
+          <p>📂 Drag & drop CSV files here, or click to select files</p>
         </div>
 
-        {/* Display uploaded files with label selection */}
+        {/* ✅ Trade Account Dropdown */}
+        {tradeAccounts.length < 1 && (
+          <div>
+            <label>Trade Account:</label>
+            <select
+              value={selectedAccount || (newAccount ? 'new' : '')}
+              onChange={handleAccountChange}
+            >
+              <option value="">Select an account</option>
+              {tradeAccounts.map((account) => (
+                <option key={account.user_id} value={account.name}>
+                  {account.name}
+                </option>
+              ))}
+              <option value="new">+ Add New Account</option>
+            </select>
+          </div>
+        )}
+
+        {/* ✅ New Account Input (only shown when "Add New Account" is selected) */}
+        {selectedAccount === '' && (
+          <div>
+            <input
+              type="text"
+              placeholder="Enter new account name"
+              value={newAccount}
+              onChange={handleNewAccountChange}
+            />
+          </div>
+        )}
+
+        {/* ✅ Uploaded Files with Labels */}
         <div>
           <h3>Uploaded Files:</h3>
           {files.map((file) => (
             <div key={file.name} style={{ marginBottom: '10px' }}>
               <strong>{file.name}</strong> ({file.size} bytes)
-              {/* Label selection for each file */}
               <div style={{ marginTop: '10px' }}>
                 <label>Select Label: </label>
                 <select
@@ -148,22 +208,12 @@ export default function FileUpload({ onUploadClose }) {
           ))}
         </div>
 
-        {/* Show selected labels for the files */}
-        <div style={{ marginTop: '20px' }}>
-          <h4>File Labels:</h4>
-          <ul>
-            {files.map((file) => (
-              <li key={file.name}>
-                {file.name} - {selectedLabels[file.name] || 'No label assigned'}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {/* ✅ Upload Button */}
         <button type="submit" className="submit-btn" onClick={handleFileUpload}>
           Upload File
         </button>
 
-        {/* Upload status */}
+        {/* ✅ Upload Status */}
         {uploadStatus && (
           <p style={{ color: uploadStatus.success ? 'green' : 'red' }}>{uploadStatus.message}</p>
         )}

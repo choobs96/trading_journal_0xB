@@ -7,22 +7,14 @@ import { dirname } from 'path';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import data from './data.js'; // ✅ Ensure correct import of trade data
+import db from './db.js'; // ✅ PostgreSQL connection
+import processTrades from './processTrades.js'; // ✅ Process CSV data
 
 const app = express();
 const port = 5001;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-// Sample user data (hashed password: "password123")
-const users = [
-  {
-    id: 1,
-    email: 'user@example.com',
-    password: '$2b$10$DHV/w1YQDKitmxTOMOhwTOZfAUmkdPB5Tz/376Ls9d8qS/IxUCPgO',
-  },
-];
 
 // Middleware setup
 app.use(cors());
@@ -40,12 +32,14 @@ const authenticateToken = (req, res, next) => {
     return res.status(403).json({ success: false, message: 'Access Denied: No token provided' });
   }
 
-  jwt.verify(token, 'test_secret_key', (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET || 'test_secret_key', (err, user) => {
     if (err) {
       console.error('❌ Invalid token:', err.message);
       return res.status(403).json({ success: false, message: 'Invalid token' });
     }
+
     req.user = user;
+	console.log(req.user) // ✅ Attach `user_id` to request
     next();
   });
 };
@@ -55,35 +49,78 @@ app.post('/api/login', async (req, res) => {
   console.log('🔑 Logging in...');
   const { email, password } = req.body;
 
-  const user = users.find((user) => user.email === email);
-  if (!user) {
-    console.warn('❌ Login failed: Invalid credentials');
-    return res.status(400).json({ success: false, message: 'Invalid credentials' });
-  }
+  try {
+    // ✅ Use parameterized query to fetch user by email
+    const user = await db.query(`SELECT user_id, email, password FROM users WHERE email = $1;`, [email]);
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    console.warn('❌ Login failed: Incorrect password');
-    return res.status(400).json({ success: false, message: 'Invalid credentials' });
-  }
+    if (user.rows.length === 0) {
+      console.warn('❌ Login failed: Invalid credentials');
+      return res.status(400).json({ success: false, message: 'Invalid credentials' });
+    }
 
-  const token = jwt.sign({ id: user.id, email: user.email }, 'test_secret_key', { expiresIn: '1h' });
-  console.log('✅ Login successful');
-  res.json({ success: true, token });
+    // ✅ Compare entered password with hashed password in DB
+    const isMatch = await bcrypt.compare(password, user.rows[0].password);
+    if (!isMatch) {
+      console.warn('❌ Login failed: Incorrect password');
+      return res.status(400).json({ success: false, message: 'Invalid credentials' });
+    }
+
+    // ✅ Store `user_id` in the JWT token
+    const token = jwt.sign(
+      { user_id: user.rows[0].user_id, email: user.rows[0].email },
+      process.env.JWT_SECRET || 'test_secret_key',
+      { expiresIn: '1h' }
+    );
+
+    console.log('✅ Login successful');
+    res.json({ success: true, token });
+  } catch (error) {
+    console.error('❌ Login error:', error);
+    res.status(500).json({ success: false, message: 'Login failed' });
+  }
 });
 
-// **API endpoint to serve trade data**
-app.get('/api/data', authenticateToken, (req, res) => {
-  console.log('📊 Fetching trade data...');
-  res.json({ success: true, data });
+// **Get All Trades for the Logged-in User**
+app.get('/api/data', authenticateToken, async (req, res) => {
+  console.log(`📊 Fetching trades for user_id: ${req.user.user_id}...`);
+
+  try {
+    const trades = await db.query(
+      `SELECT * FROM trades WHERE user_id = $1 ORDER BY time_of_first_entry DESC;`,
+      [req.user.user_id]
+    );
+
+    res.json({ success: true, data: trades.rows });
+  } catch (error) {
+    console.error('❌ Error fetching trades:', error);
+    res.status(500).json({ success: false, message: 'Error fetching trade data' });
+  }
 });
 
-// **Protected file upload route**
+// **Get Trade Accounts for the Logged-in User**
+app.get('/api/trade-accounts', authenticateToken, async (req, res) => {
+  console.log(`📂 Fetching trade accounts for user_id: ${req.user.user_id}...`);
+
+  try {
+    const tradeAccounts = await db.query(
+      `SELECT DISTINCT trade_account FROM trades WHERE user_id = $1;`,
+      [req.user.user_id]
+    );
+
+    res.json({
+      success: true,
+      tradeAccounts: tradeAccounts.rows.map((row) => row.trade_account), // Extract trade account names
+    });
+
+  } catch (error) {
+    console.error('❌ Error fetching trade accounts:', error);
+    res.status(500).json({ success: false, message: 'Error fetching trade accounts' });
+  }
+});
+
+// **Protected file upload route (with PostgreSQL processing)**
 app.post('/api/upload', authenticateToken, async (req, res) => {
   console.log('📂 Uploading process started...');
-
-  // **Debugging: Print request files**
-  console.log('📂 Files received:', req.files);
 
   if (!req.files || Object.keys(req.files).length === 0) {
     console.error('❌ No files uploaded.');
@@ -102,7 +139,6 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
   let positionsPath = null;
 
   try {
-    // **Upload all files**
     await Promise.all(
       uploadedFiles.map((file) => {
         if (!file || !file.name) {
@@ -120,7 +156,6 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
               return reject(err);
             }
 
-            // Assign correct paths
             const fileNameLower = file.name.toLowerCase();
             if (fileNameLower.includes('history.csv')) historyPath = filePath;
             if (fileNameLower.includes('positions.csv')) positionsPath = filePath;
@@ -131,7 +166,6 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
       })
     );
 
-    // **Ensure both required files exist**
     if (!historyPath || !positionsPath) {
       console.error('❌ Missing required files: History.csv or Positions.csv');
       return res.status(400).json({
@@ -143,14 +177,30 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
     console.log(`📂 History Path: ${historyPath}`);
     console.log(`📂 Positions Path: ${positionsPath}`);
 
-    // **Call processTrades function here if needed**
-    // await processTrades(historyPath, positionsPath);
+    // ✅ Extract user ID from the authenticated request
+    const user_id = req.user?.user_id;  // 🛠 Ensure `user_id` is retrieved correctly
+    const { trade_account } = req.body;
 
+    if (!user_id) {
+      console.error('❌ User ID is undefined in the request');
+      return res.status(400).json({ success: false, message: 'User authentication failed.' });
+    }
+
+    if (!trade_account) {
+      return res.status(400).json({ success: false, message: 'Trade account is required.' });
+    }
+
+    console.log(`⚡ Processing trades for user ${user_id} and trade account ${trade_account}...`);
+
+    // ✅ Call processTrades and pass user_id & trade_account
+    await processTrades(historyPath, positionsPath, user_id, trade_account);
+
+    console.log('✅ Trade data successfully processed to DB!');
     return res.status(200).json({
       success: true,
-      message: 'Files uploaded successfully!',
-      files: { historyPath, positionsPath },
+      message: 'Files uploaded and processed successfully!',
     });
+
   } catch (error) {
     console.error('❌ Upload error:', error);
     return res.status(500).json({ success: false, message: 'Error uploading files.', error: error.message });

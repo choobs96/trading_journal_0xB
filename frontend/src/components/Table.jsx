@@ -64,8 +64,8 @@ export default function Table({ tradedata }) {
   const columns = [
     {
       title: 'TradeID',
-      dataIndex: 'tradeid',
-      key: 'tradeid',
+      dataIndex: 'trade_id',
+      key: 'trade_id',
       sorter: { compare: (a, b) => a.id - b.id, multiple: 1 },
     },
     {

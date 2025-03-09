@@ -47,7 +47,7 @@ function App() {
         .then((response) => {
           console.log('Fetched data:', response);
           setData(response.data.data); // Set the fetched data
-          console.log(data);
+          console.log('this is get data for table', response.data);
         })
         .catch((error) => {
           console.error('Error fetching data:', error.response || error.message);
@@ -140,7 +140,7 @@ function App() {
       />
     );
   };
-
+  console.log(data);
   return (
     <>
       <header>

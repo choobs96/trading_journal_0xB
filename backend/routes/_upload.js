@@ -95,7 +95,9 @@ router.post('/upload', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     console.error('❌ File upload error:', error);
-    return res.status(500).json({ success: false, message: 'Error uploading files.', error: error.message });
+    return res
+      .status(500)
+      .json({ success: false, message: 'Error uploading files.', error: error.message });
   }
 });
 

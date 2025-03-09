@@ -1,5 +1,6 @@
 import fs from 'fs';
 import papa from 'papaparse';
+import db from './db.js'; // ✅ Import PostgreSQL connection
 
 // Function to get actual fill price from an order row
 function getFillPrice(order) {
@@ -18,10 +19,10 @@ function convertToSGT(date) {
 }
 
 // Function to process trade data
-const processTrades = async (historyFilePath, positionsFilePath) => {
+const processTrades = async (historyFilePath, positionsFilePath, user_id, trade_account) => {
   try {
     console.log(
-      `🔄 Processing trade files:\n - History: ${historyFilePath}\n - Positions: ${positionsFilePath}`
+      `🔄 Processing trade files for user ${user_id}:\n - History: ${historyFilePath}\n - Positions: ${positionsFilePath}`
     );
 
     // Ensure both required files exist
@@ -129,67 +130,61 @@ const processTrades = async (historyFilePath, positionsFilePath) => {
 
     console.log(`✅ Processed ${tradeSummary.length} trades.`);
 
-    // Convert trades to output format
-    const buildOutputRows = () => {
-      return tradeSummary
-        .map((trade) => {
-          const tradeId = `uuid-${Math.random().toString(36).substr(2, 9)}`;
-          const symbol = trade.Symbol;
-          const side = trade.Side;
-          const entryOrders = trade.entry_orders;
-          const exitOrders = trade.exit_orders;
+    // Insert trades into PostgreSQL
+    for (const trade of tradeSummary) {
+      const symbol = trade.Symbol;
+      const side = trade.Side;
+      const entryOrders = trade.entry_orders;
+      const exitOrders = trade.exit_orders;
 
-          if (entryOrders.length === 0 || exitOrders.length === 0) return null; // Skip incomplete trades
+      if (entryOrders.length === 0 || exitOrders.length === 0) continue; // Skip incomplete trades
 
-          const firstEntryTime = new Date(
-            Math.min(...entryOrders.map((o) => new Date(o['Closing Time'])))
-          );
-          const lastExitTime = new Date(
-            Math.max(...exitOrders.map((o) => new Date(o['Closing Time'])))
-          );
+      const firstEntryTime = new Date(
+        Math.min(...entryOrders.map((o) => new Date(o['Closing Time'])))
+      );
+      const lastExitTime = new Date(
+        Math.max(...exitOrders.map((o) => new Date(o['Closing Time'])))
+      );
 
-          const totalEntryQty = entryOrders.reduce((acc, o) => acc + o['Qty'], 0);
-          const avgEntryPrice =
-            entryOrders.reduce((acc, o) => acc + getFillPrice(o) * o['Qty'], 0) / totalEntryQty;
+      const totalEntryQty = entryOrders.reduce((acc, o) => acc + o['Qty'], 0);
+      const avgEntryPrice =
+        entryOrders.reduce((acc, o) => acc + getFillPrice(o) * o['Qty'], 0) / totalEntryQty;
 
-          const totalExitQty = exitOrders.reduce((acc, o) => acc + o['Qty'], 0);
-          const avgExitPrice =
-            exitOrders.reduce((acc, o) => acc + getFillPrice(o) * o['Qty'], 0) / totalExitQty;
+      const totalExitQty = exitOrders.reduce((acc, o) => acc + o['Qty'], 0);
+      const avgExitPrice =
+        exitOrders.reduce((acc, o) => acc + getFillPrice(o) * o['Qty'], 0) / totalExitQty;
 
-          const totalBuy = totalEntryQty * avgEntryPrice;
-          const totalSell = totalExitQty * avgExitPrice;
-          const pnl = side === 'Buy' ? totalSell - totalBuy : totalBuy - totalSell;
-          const outcome = pnl > 0 ? 'Profit' : 'Loss';
+      const totalBuy = totalEntryQty * avgEntryPrice;
+      const totalSell = totalExitQty * avgExitPrice;
+      const pnl = side === 'Buy' ? totalSell - totalBuy : totalBuy - totalSell;
+      const outcome = pnl > 0 ? 'Profit' : 'Loss';
 
-          return {
-            tradeid: tradeId,
-            symbol: symbol,
-            side: side,
-            time_of_first_entry: convertToSGT(firstEntryTime),
-            avg_entry_price: avgEntryPrice,
-            total_entry_stock_amount: totalEntryQty,
-            time_of_last_exit: convertToSGT(lastExitTime),
-            avg_exit_price: avgExitPrice,
-            total_exit_stock_amount: totalExitQty,
-            total_buy: totalBuy,
-            total_sell: totalSell,
-            pnl: pnl,
-            outcome: outcome,
-          };
-        })
-        .filter((row) => row !== null);
-    };
+      // Insert into PostgreSQL
+      await db.query(
+        `INSERT INTO trades 
+        (user_id, trade_account, symbol, side, time_of_first_entry, avg_entry_price, total_entry_stock_amount, 
+         time_of_last_exit, avg_exit_price, total_exit_stock_amount, total_buy, total_sell, pnl, outcome) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+        [
+          user_id,
+          trade_account,
+          symbol,
+          side,
+          convertToSGT(firstEntryTime),
+          avgEntryPrice,
+          totalEntryQty,
+          convertToSGT(lastExitTime),
+          avgExitPrice,
+          totalExitQty,
+          totalBuy,
+          totalSell,
+          pnl,
+          outcome,
+        ]
+      );
+    }
 
-    // Build output and save it to data.js
-    const outputRows = buildOutputRows();
-    const outputJs = `const trades = ${JSON.stringify(
-      outputRows,
-      null,
-      4
-    )};\nexport default trades;`;
-    fs.writeFileSync('./data.js', outputJs);
-
-    console.log('✅ Trade data successfully processed and saved to data.js');
+    console.log('✅ Trade data successfully inserted into PostgreSQL!');
   } catch (error) {
     console.error('❌ Error processing trades:', error);
   }
