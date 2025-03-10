@@ -72,16 +72,14 @@ const processTrades = async (historyFilePath, positionsFilePath, user_id, trade_
           .filter((item) => item['Symbol'] === symbol)
           .sort((a, b) => new Date(a['Closing Time']) - new Date(b['Closing Time']));
 
-        let positionQty = 0; // Track current position for this symbol
+        let positionQty = 0;
         let currentTrade = null;
 
         symbolHistory.forEach((order) => {
-          const status = order['Status'];
-          const side = order['Side']; // 'Buy' or 'Sell'
+          if (order['Status'] !== 'Filled') return;
+
+          const side = order['Side'];
           const qty = order['Qty'];
-
-          if (status !== 'Filled') return; // Ignore non-filled orders
-
           const qtySigned = side === 'Buy' ? qty : -qty;
 
           if (positionQty === 0) {
@@ -137,7 +135,7 @@ const processTrades = async (historyFilePath, positionsFilePath, user_id, trade_
       const entryOrders = trade.entry_orders;
       const exitOrders = trade.exit_orders;
 
-      if (entryOrders.length === 0 || exitOrders.length === 0) continue; // Skip incomplete trades
+      if (entryOrders.length === 0 || exitOrders.length === 0) continue;
 
       const firstEntryTime = new Date(
         Math.min(...entryOrders.map((o) => new Date(o['Closing Time'])))
@@ -159,12 +157,47 @@ const processTrades = async (historyFilePath, positionsFilePath, user_id, trade_
       const pnl = side === 'Buy' ? totalSell - totalBuy : totalBuy - totalSell;
       const outcome = pnl > 0 ? 'Profit' : 'Loss';
 
+      // Additional Columns
+      const numEntries = entryOrders.length;
+      const numExits = exitOrders.length;
+
+      let stopLossVal = null;
+      let priceTargetVal = null;
+
+      const tradeHistory = historyData.filter(
+        (o) =>
+          o['Symbol'] === symbol &&
+          new Date(o['Placing Time']) >= firstEntryTime &&
+          new Date(o['Closing Time']) <= lastExitTime
+      );
+
+      const oppositeSide = side === 'Buy' ? 'Sell' : 'Buy';
+
+      const stopOrders = tradeHistory.filter(
+        (o) => o['Side'] === oppositeSide && o['Type'] === 'Stop'
+      );
+      if (stopOrders.length > 0) {
+        stopLossVal =
+          stopOrders[stopOrders.length - 1]['Stop Price'] ||
+          stopOrders[stopOrders.length - 1]['Limit Price'];
+      }
+
+      const limitOrders = tradeHistory.filter(
+        (o) => o['Side'] === oppositeSide && o['Type'] === 'Limit'
+      );
+      if (limitOrders.length > 0) {
+        priceTargetVal =
+          limitOrders[limitOrders.length - 1]['Limit Price'] ||
+          limitOrders[limitOrders.length - 1]['Stop Price'];
+      }
+
       // Insert into PostgreSQL
       await db.query(
         `INSERT INTO trades 
         (user_id, trade_account, symbol, side, time_of_first_entry, avg_entry_price, total_entry_stock_amount, 
-         time_of_last_exit, avg_exit_price, total_exit_stock_amount, total_buy, total_sell, pnl, outcome) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+         time_of_last_exit, avg_exit_price, total_exit_stock_amount, total_buy, total_sell, pnl, outcome, 
+         num_entries, num_exits, stop_loss, price_target) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`,
         [
           user_id,
           trade_account,
@@ -180,6 +213,10 @@ const processTrades = async (historyFilePath, positionsFilePath, user_id, trade_
           totalSell,
           pnl,
           outcome,
+          numEntries,
+          numExits,
+          stopLossVal,
+          priceTargetVal,
         ]
       );
     }
