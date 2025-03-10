@@ -105,7 +105,7 @@ app.get('/api/agg_daily_data', authenticateToken, async (req, res) => {
   try {
     const trades = await db.query(
       `SELECT 
-            DATE(time_of_last_exit) AS trade_date,
+            DATE(time_of_first_entry) AS trade_date,
             COUNT(*) AS total_trades,
             ROUND(COALESCE(SUM(pnl), 0), 2) AS total_pnl,
             ROUND(COALESCE(
@@ -114,11 +114,23 @@ app.get('/api/agg_daily_data', authenticateToken, async (req, res) => {
                     ELSE SUM(CASE WHEN pnl > 0 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)
                 END, 0), 2
             ) AS win_rate,
-            ROUND(COALESCE(
-                CASE 
-                    WHEN SUM(CASE WHEN pnl < 0 THEN ABS(pnl) ELSE 0 END) = 0 THEN NULL
-                    ELSE SUM(CASE WHEN pnl > 0 THEN pnl ELSE 0 END) / NULLIF(SUM(CASE WHEN pnl < 0 THEN ABS(pnl) ELSE 0 END), 0)
-                END, 0), 2
+            (
+              SUM(
+                  CASE 
+                      WHEN side = 'Buy' THEN 
+                          CASE 
+                              WHEN (avg_exit_price - avg_entry_price) > 0 
+                              THEN ROUND((avg_exit_price - avg_entry_price) / NULLIF(avg_entry_price - stop_loss, 0), 2) 
+                              ELSE -1 
+                          END
+                      ELSE 
+                          CASE 
+                              WHEN (avg_entry_price - avg_exit_price) > 0 
+                              THEN ROUND((avg_entry_price - avg_exit_price) / NULLIF(stop_loss - avg_entry_price, 0), 2) 
+                              ELSE -1 
+                          END
+                  END
+              ) 
             ) AS total_rr
         FROM trades 
         WHERE user_id = $1
