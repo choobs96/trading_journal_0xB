@@ -82,6 +82,41 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// for registration route
+app.post('/api/register', async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ success: false, message: 'Email and password are required' });
+  }
+
+  try {
+    // Check if user already exists
+    const existingUser = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ success: false, message: 'Email already in use' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert user into PostgreSQL
+    const result = await db.query(
+      'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING user_id, email',
+      [email, hashedPassword]
+    );
+
+    res.json({
+      success: true,
+      message: 'User registered successfully',
+      user: result.rows[0], // Return user ID and email
+    });
+  } catch (error) {
+    console.error('Error during registration:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
+
 // **Get All Trades for the Logged-in User**
 app.get('/api/data', authenticateToken, async (req, res) => {
   console.log(`📊 Fetching trades for user_id: ${req.user.user_id}...`);

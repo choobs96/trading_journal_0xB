@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 export default function LoginPage({ onLoginClose, onLogin }) {
+  const [isRegistering, setIsRegistering] = useState(false); // Toggle between login & register
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  // Close the login modal when clicking outside the login container
+  // Close the login modal when clicking outside the container
   function handleOverlayClick(event) {
     if (event.target.classList.contains('login-overlay')) {
       onLoginClose();
@@ -15,19 +18,43 @@ export default function LoginPage({ onLoginClose, onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5001/api/login', { email, password });
+    setError('');
 
-      if (response.data.token) {
-        console.log('Logged in successfully');
-        localStorage.setItem('auth_token', response.data.token); // Store token in localStorage
-        onLogin(response); // Pass the entire response object to onLogin
+    try {
+      if (isRegistering) {
+        // ✅ Registration logic
+        if (password !== confirmPassword) {
+          setError('Passwords do not match');
+          return;
+        }
+
+        const response = await axios.post('http://localhost:5001/api/register', {
+          name,
+          email,
+          password,
+        });
+
+        if (response.data.success) {
+          alert('Registration successful! You can now log in.');
+          setIsRegistering(false); // Switch back to login mode
+        } else {
+          setError(response.data.message || 'Registration failed');
+        }
       } else {
-        setError('Invalid credentials');
+        // ✅ Login logic
+        const response = await axios.post('http://localhost:5001/api/login', { email, password });
+
+        if (response.data.token) {
+          console.log('Logged in successfully');
+          localStorage.setItem('auth_token', response.data.token);
+          onLogin(response);
+        } else {
+          setError('Invalid credentials');
+        }
       }
     } catch (error) {
-      console.error('Error during login', error);
-      setError(error.response?.data?.message || 'An error occurred during login');
+      console.error('Error:', error);
+      setError(error.response?.data?.message || 'An error occurred');
     }
   };
 
@@ -35,11 +62,12 @@ export default function LoginPage({ onLoginClose, onLogin }) {
     <div className="login-overlay" onClick={handleOverlayClick}>
       <div className="login-container">
         <div className="login-header">
-          <h1>Login</h1>
+          <h1>{isRegistering ? 'Register' : 'Login'}</h1>
           <button className="close-btn" onClick={onLoginClose}>
             X
           </button>
         </div>
+
         <form className="login-form" onSubmit={handleSubmit}>
           <div>
             <label>Email:</label>
@@ -54,9 +82,28 @@ export default function LoginPage({ onLoginClose, onLogin }) {
               required
             />
           </div>
-          <button type="submit">Login</button>
+          {isRegistering && (
+            <div>
+              <label>Confirm Password:</label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+          )}
+
+          <button type="submit">{isRegistering ? 'Register' : 'Login'}</button>
           {error && <p className="login-error">{error}</p>}
         </form>
+
+        <p className="toggle-link">
+          {isRegistering ? 'Already have an account? ' : "Don't have an account? "}
+          <button onClick={() => setIsRegistering(!isRegistering)}>
+            {isRegistering ? 'Login' : 'Register'}
+          </button>
+        </p>
       </div>
     </div>
   );

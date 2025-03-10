@@ -313,3 +313,29 @@ select:focus {
   border-color: #0056b3;
   outline: none;
 }
+
+.toggle-link {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+}
+
+.toggle-link button {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  padding: 5px;
+}
+
+.toggle-link button:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.toggle-link button:focus {
+  outline: none;
+}

@@ -80,7 +80,7 @@ export default function TradeCards({ trade, onClose }) {
           </p>
         </div>
       </div>
-      <div style={{ display: 'flex', gap: '2rem', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ width: '80%', height: 650 }}>
           {/* TinyMCE Editor */}
           <TinyMCEEditor
