@@ -47,6 +47,18 @@ export default function TradeCards({ trade, onClose }) {
             <strong>Exit Price:</strong> {trade.avg_exit_price}
           </p>
           <p>
+            <strong>No. Entries:</strong> {trade.num_entries}
+          </p>
+          <p>
+            <strong>No. Exits:</strong> {trade.num_exits}
+          </p>
+          <p>
+            <strong>SL:</strong> {trade.stop_loss}
+          </p>
+          <p>
+            <strong>TP:</strong> {trade.price_target}
+          </p>
+          <p>
             <strong>Outcome:</strong>
             <span className={results === 'Profit' ? 'outcomeProfit' : 'outcomeLost'}>
               {results}
@@ -69,14 +81,14 @@ export default function TradeCards({ trade, onClose }) {
         </div>
       </div>
       <div style={{ display: 'flex', gap: '2rem', flexDirection: 'column' }}>
-        <div style={{ width: '80%' }}>
+        <div style={{ width: '80%', height: 650 }}>
           {/* TinyMCE Editor */}
           <TinyMCEEditor
             apiKey="e5xcrvnum6m3pm6l1gwgjz6b3lev10rep62w36muc9zjh0yq"
             value={tinyMCEValue}
             onEditorChange={(content) => setTinyMCEValue(content)}
             init={{
-              height: 500,
+              height: 650,
               menubar: false,
               plugins: [
                 'anchor',

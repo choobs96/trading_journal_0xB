@@ -6,7 +6,7 @@ export default function Table({ tradedata }) {
   const [selectedTrade, setSelectedTrade] = React.useState(null);
   const [toggleTrades, setToggleTrades] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1); // Track the current page
-  const [pageSize, setPageSize] = React.useState(10); // Track the current page size
+  const [pageSize, setPageSize] = React.useState(5); // Track the current page size
   const [sortedData, setSortedData] = React.useState(tradedata); // To store the sorted dataset
 
   // Function for handling row click
@@ -83,6 +83,11 @@ export default function Table({ tradedata }) {
     { title: 'Quantity', dataIndex: 'total_entry_stock_amount', key: 'total_entry_stock_amount' },
     { title: 'Entry Price', dataIndex: 'avg_entry_price', key: 'avg_entry_price' },
     { title: 'Exit Price', dataIndex: 'avg_exit_price', key: 'avg_exit_price' },
+    // num_entries, num_exits, stop_loss, price_target;
+    { title: 'No. Entries', dataIndex: 'num_entries', key: 'num_entries' },
+    { title: 'No. Exits', dataIndex: 'num_exits', key: 'num_exits' },
+    { title: 'SL', dataIndex: 'stop_loss', key: 'stop_loss' },
+    { title: 'TP', dataIndex: 'price_target', key: 'price_target' },
     {
       title: 'Risk/Reward',
       dataIndex: 'risk_reward',
@@ -209,7 +214,7 @@ export default function Table({ tradedata }) {
       {/* Custom Pagination with Dropdown for page size change */}
       <Pagination
         defaultCurrent={1} // Default page number
-        defaultPageSize={10} // Default page size
+        defaultPageSize={5} // Default page size
         total={sortedData.length} // Total rows
         showSizeChanger
         pageSizeOptions={['5', '10', '15', '20']}
