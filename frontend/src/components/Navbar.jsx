@@ -4,9 +4,12 @@ export default function NavBar(props) {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
+        {/* Left Side - Branding */}
         <a className="navbar-brand" href="#">
           Trading Journal Web App
         </a>
+
+        {/* Navbar Toggle for Mobile */}
         <button
           className="navbar-toggler"
           type="button"
@@ -18,19 +21,24 @@ export default function NavBar(props) {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
+
+        {/* Navbar Links */}
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
+          <ul className="navbar-nav me-auto">
             <li className="nav-item">
               <a className="nav-link" href="#">
                 Historical Trades
               </a>
             </li>
-            <li>
+            <li className="nav-item">
               <a className="nav-link" href="#" onClick={props.onToggleForm}>
                 Import Paper Trades
               </a>
             </li>
+          </ul>
 
+          {/* Right Side - Login/Logout Button */}
+          <ul className="navbar-nav ms-auto">
             {login_status ? (
               <li className="nav-item">
                 <a className="nav-link" href="#" onClick={props.onLogout}>
@@ -38,7 +46,7 @@ export default function NavBar(props) {
                 </a>
               </li>
             ) : (
-              <li>
+              <li className="nav-item">
                 <a className="nav-link" href="#" onClick={props.onToggleLogin}>
                   Login
                 </a>
