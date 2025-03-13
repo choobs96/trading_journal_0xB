@@ -35,7 +35,7 @@ const calculateAggregatedData = (trades) => {
       aggregatedData[date].losingTrades += 1;
     }
   });
-
+  //temp push
   // Convert aggregated data to an array format
   const resultArray = Object.keys(aggregatedData).map((date) => {
     const dayData = aggregatedData[date];
