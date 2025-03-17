@@ -21,6 +21,45 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: trade_journals; Type: TABLE; Schema: public; Owner: choobs
+--
+
+CREATE TABLE public.trade_journals (
+    journal_id integer NOT NULL,
+    trade_id integer NOT NULL,
+    user_id integer NOT NULL,
+    trade_account character varying(50) NOT NULL,
+    journal_content jsonb NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.trade_journals OWNER TO choobs;
+
+--
+-- Name: trade_journals_journal_id_seq; Type: SEQUENCE; Schema: public; Owner: choobs
+--
+
+CREATE SEQUENCE public.trade_journals_journal_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.trade_journals_journal_id_seq OWNER TO choobs;
+
+--
+-- Name: trade_journals_journal_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: choobs
+--
+
+ALTER SEQUENCE public.trade_journals_journal_id_seq OWNED BY public.trade_journals.journal_id;
+
+
+--
 -- Name: trades; Type: TABLE; Schema: public; Owner: choobs
 --
 
@@ -111,6 +150,13 @@ ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
 
 
 --
+-- Name: trade_journals journal_id; Type: DEFAULT; Schema: public; Owner: choobs
+--
+
+ALTER TABLE ONLY public.trade_journals ALTER COLUMN journal_id SET DEFAULT nextval('public.trade_journals_journal_id_seq'::regclass);
+
+
+--
 -- Name: trades trade_id; Type: DEFAULT; Schema: public; Owner: choobs
 --
 
@@ -122,6 +168,14 @@ ALTER TABLE ONLY public.trades ALTER COLUMN trade_id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+
+
+--
+-- Name: trade_journals trade_journals_pkey; Type: CONSTRAINT; Schema: public; Owner: choobs
+--
+
+ALTER TABLE ONLY public.trade_journals
+    ADD CONSTRAINT trade_journals_pkey PRIMARY KEY (journal_id);
 
 
 --
@@ -146,6 +200,22 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: trade_journals trade_journals_trade_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: choobs
+--
+
+ALTER TABLE ONLY public.trade_journals
+    ADD CONSTRAINT trade_journals_trade_id_fkey FOREIGN KEY (trade_id) REFERENCES public.trades(trade_id) ON DELETE CASCADE;
+
+
+--
+-- Name: trade_journals trade_journals_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: choobs
+--
+
+ALTER TABLE ONLY public.trade_journals
+    ADD CONSTRAINT trade_journals_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
 
 
 --

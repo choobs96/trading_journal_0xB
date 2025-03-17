@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import db from './db.js'; // ✅ PostgreSQL connection
 import processTrades from './processTrades.js'; // ✅ Process CSV data
+import multer from 'multer';
 
 const app = express();
 const port = 5001;
