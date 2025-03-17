@@ -12,7 +12,7 @@ export default function TradeCards({ trade, onClose }) {
       ? trade.total_entry_stock_amount * (trade.avg_exit_price - trade.avg_entry_price) > 0
         ? 'Profit'
         : 'Loss'
-      : trade.total_entry_stock_amount * (trade.avg_exit_price - trade.avg_entry_price) > 0
+      : trade.total_entry_stock_amount * (trade.avg_entry_price - trade.avg_exit_price) < 0
         ? 'Loss'
         : 'Profit';
   console.log(results);
@@ -66,7 +66,7 @@ export default function TradeCards({ trade, onClose }) {
           </p>
           <p>
             <strong>PNL:</strong> $
-            <span className={results ? 'outcomeProfit' : 'outcomeLost'}>
+            <span className={results === 'Profit' ? 'outcomeProfit' : 'outcomeLost'}>
               {trade.side === 'Buy'
                 ? Math.round(
                     trade.total_entry_stock_amount * (trade.avg_exit_price - trade.avg_entry_price)
@@ -78,10 +78,11 @@ export default function TradeCards({ trade, onClose }) {
                   )}
             </span>
           </p>
+          <button className="journal-button">Save journal</button>
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ width: '80%', height: 650 }}>
+        <div style={{ width: '100%', height: 650 }}>
           {/* TinyMCE Editor */}
           <TinyMCEEditor
             apiKey="e5xcrvnum6m3pm6l1gwgjz6b3lev10rep62w36muc9zjh0yq"
