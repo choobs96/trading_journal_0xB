@@ -299,3 +299,5 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
 app.listen(port, () => {
   console.log(`🚀 Server running at http://localhost:${port}`);
 });
+
+// IN PROGRESS FOR NEW ITEMS INTERGRATION OF SAVING JOURNAL COMMENTS
