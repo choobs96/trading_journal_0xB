@@ -40,9 +40,9 @@ A comprehensive trading journal application for tracking and analyzing your trad
 ```env
 JWT_SECRET=your_secure_jwt_secret_here
 PORT=5001
-DB_FILENAME=./trading_journal.db
-UPLOAD_DIR=./uploads
-CORS_ORIGIN=http://localhost:5173
+DB_FILENAME=trading_journal.db
+UPLOAD_DIR=uploads
+CORS_ORIGIN=*
 ```
 
 **Frontend (.env.local):**
@@ -145,7 +145,7 @@ npm install
 npm start
 ```
 
-The backend will run on `http://localhost:5001` (configurable via environment variables)
+The backend will run on the configured port (default: 5001, configurable via environment variables)
 
 ### Frontend Setup
 
@@ -164,7 +164,7 @@ npm install
 npm run dev
 ```
 
-The frontend will run on `http://localhost:5173`
+The frontend will run on the configured port (default: 5173)
 
 ## Usage
 

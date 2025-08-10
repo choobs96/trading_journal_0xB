@@ -19,7 +19,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Middleware setup
-app.use(cors());
+app.use(cors({
+  origin: config.cors.origin,
+  credentials: true
+}));
 app.use(express.json());
 app.use(fileUpload()); // Enable file uploads
 

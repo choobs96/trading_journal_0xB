@@ -4,38 +4,43 @@ import path from 'path';
 // Load environment variables from .env file
 dotenv.config();
 
+// Backend configuration
 const config = {
   // Database Configuration
   database: {
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
-    user: process.env.DB_USER || 'dev',
-    password: process.env.DB_PASSWORD || 'dev_password',
-    name: process.env.DB_NAME || 'trading_journal',
-    filename: process.env.DB_FILENAME || './trading_journal.db'
+    filename: process.env.DB_FILENAME || 'trading_journal.db',
+    verbose: process.env.DB_VERBOSE === 'true' || false,
   },
 
   // JWT Configuration
   jwt: {
-    secret: process.env.JWT_SECRET || 'dev_jwt_secret_key_for_local_development_only_12345',
-    expiresIn: process.env.JWT_EXPIRES_IN || '1h'
+    secret: process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production',
+    expiresIn: process.env.JWT_EXPIRES_IN || '24h',
   },
 
   // Server Configuration
   server: {
     port: process.env.PORT || 5001,
-    nodeEnv: process.env.NODE_ENV || 'development'
+    host: process.env.HOST || '0.0.0.0',
   },
 
-  // File Upload Configuration
+  // Upload Configuration
   upload: {
-    directory: process.env.UPLOAD_DIR || './uploads',
-    maxFileSize: parseInt(process.env.MAX_FILE_SIZE) || 10485760 // 10MB
+    directory: process.env.UPLOAD_DIR || 'uploads',
+    maxFileSize: process.env.MAX_FILE_SIZE || 10 * 1024 * 1024, // 10MB
+    allowedTypes: process.env.ALLOWED_FILE_TYPES || '.csv,.xlsx,.xls',
   },
 
   // CORS Configuration
   cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173'
+    origin: process.env.CORS_ORIGIN || '*',
+    credentials: process.env.CORS_CREDENTIALS === 'true' || false,
+  },
+
+  // Logging Configuration
+  logging: {
+    level: process.env.LOG_LEVEL || 'info',
+    file: process.env.LOG_FILE || 'logs.txt',
   }
 };
 

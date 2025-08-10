@@ -43,10 +43,15 @@ export default function LoginPage({ onLoginClose, onLogin }) {
         }
       } else {
         // ✅ Login logic
+        console.log('🔍 Attempting login with:', { email, password });
+        console.log('🔍 API URL:', `${config.api.baseURL}/api/login`);
+        
         const response = await axios.post(`${config.api.baseURL}/api/login`, { email, password });
+        
+        console.log('🔍 Login response:', response.data);
 
         if (response.data.token) {
-          console.log('Logged in successfully');
+          console.log('✅ Logged in successfully');
           localStorage.setItem('auth_token', response.data.token);
           onLogin(response);
         } else {
@@ -54,7 +59,13 @@ export default function LoginPage({ onLoginClose, onLogin }) {
         }
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('❌ Login error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        config: error.config
+      });
       setError(error.response?.data?.message || 'An error occurred');
     }
   };
