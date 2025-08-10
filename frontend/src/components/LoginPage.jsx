@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import config from '../config.js';
 
 export default function LoginPage({ onLoginClose, onLogin }) {
   const [isRegistering, setIsRegistering] = useState(false); // Toggle between login & register
@@ -28,7 +29,7 @@ export default function LoginPage({ onLoginClose, onLogin }) {
           return;
         }
 
-        const response = await axios.post('http://localhost:5001/api/register', {
+        const response = await axios.post(`${config.api.baseURL}/api/register`, {
           name,
           email,
           password,
@@ -42,7 +43,7 @@ export default function LoginPage({ onLoginClose, onLogin }) {
         }
       } else {
         // ✅ Login logic
-        const response = await axios.post('http://localhost:5001/api/login', { email, password });
+        const response = await axios.post(`${config.api.baseURL}/api/login`, { email, password });
 
         if (response.data.token) {
           console.log('Logged in successfully');

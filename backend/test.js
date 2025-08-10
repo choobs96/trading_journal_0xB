@@ -1,9 +1,11 @@
 import fs from 'fs';
 import papa from 'papaparse';
+import config from './config.js';
+import path from 'path';
 
 // Reading CSV files (Positions and History)
-const positionsCsv = fs.readFileSync('./uploads/Positions.csv', 'utf-8');
-const historyCsv = fs.readFileSync('./uploads/History.csv', 'utf-8');
+const positionsCsv = fs.readFileSync(path.join(config.upload.directory, 'Positions.csv'), 'utf-8');
+const historyCsv = fs.readFileSync(path.join(config.upload.directory, 'History.csv'), 'utf-8');
 
 // Parse the CSVs using papaparse
 const positionsData = papa.parse(positionsCsv, { header: true, dynamicTyping: true }).data;

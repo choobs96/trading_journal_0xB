@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import jwt from 'jsonwebtoken';
 import processTrades from './processTrades.js'; // Import processTrades function
+import config from '../config.js';
 
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
@@ -21,7 +22,7 @@ const authenticateToken = (req, res, next) => {
     return res.status(403).json({ success: false, message: 'Access Denied: No token provided' });
   }
 
-  jwt.verify(token, 'test_secret_key', (err, user) => {
+  jwt.verify(token, config.jwt.secret, (err, user) => {
     if (err) {
       return res.status(403).json({ success: false, message: 'Invalid token' });
     }

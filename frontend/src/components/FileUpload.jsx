@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
+import config from '../config.js';
 
 export default function FileUpload({ onUploadClose }) {
   const [files, setFiles] = useState([]);
@@ -19,7 +20,7 @@ export default function FileUpload({ onUploadClose }) {
   // ✅ Fetch trade accounts from the backend
   const fetchTradeAccounts = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/trade-accounts', {
+      const response = await axios.get(`${config.api.baseURL}/api/trade-accounts`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTradeAccounts(response.data);
@@ -110,7 +111,7 @@ export default function FileUpload({ onUploadClose }) {
       });
       formData.append('trade_account', tradeAccountToUse); // Send the selected or new account
 
-      const response = await axios.post('http://localhost:5001/api/upload', formData, {
+      const response = await axios.post(`${config.api.baseURL}/api/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,

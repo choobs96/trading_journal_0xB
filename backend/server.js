@@ -7,12 +7,13 @@ import { dirname } from 'path';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import db from './db.js'; // ✅ PostgreSQL connection
+import db from './db.js'; // ✅ SQLite connection
 import processTrades from './processTrades.js'; // ✅ Process CSV data
 import multer from 'multer';
+import config from './config.js';
 
 const app = express();
-const port = 5001;
+const port = config.server.port;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -33,7 +34,7 @@ const authenticateToken = (req, res, next) => {
     return res.status(403).json({ success: false, message: 'Access Denied: No token provided' });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET || 'test_secret_key', (err, user) => {
+  jwt.verify(token, config.jwt.secret, (err, user) => {
     if (err) {
       console.error('❌ Invalid token:', err.message);
       return res.status(403).json({ success: false, message: 'Invalid token' });
@@ -52,17 +53,17 @@ app.post('/api/login', async (req, res) => {
 
   try {
     // ✅ Use parameterized query to fetch user by email
-    const user = await db.query(`SELECT user_id, email, password FROM users WHERE email = $1;`, [
+    const user = await db.get(`SELECT user_id, email, password FROM users WHERE email = ?;`, [
       email,
     ]);
 
-    if (user.rows.length === 0) {
+    if (!user) {
       console.warn('❌ Login failed: Invalid credentials');
       return res.status(400).json({ success: false, message: 'Invalid credentials' });
     }
 
     // ✅ Compare entered password with hashed password in DB
-    const isMatch = await bcrypt.compare(password, user.rows[0].password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       console.warn('❌ Login failed: Incorrect password');
       return res.status(400).json({ success: false, message: 'Invalid credentials' });
@@ -70,9 +71,9 @@ app.post('/api/login', async (req, res) => {
 
     // ✅ Store `user_id` in the JWT token
     const token = jwt.sign(
-      { user_id: user.rows[0].user_id, email: user.rows[0].email },
-      process.env.JWT_SECRET || 'test_secret_key',
-      { expiresIn: '1h' }
+      { user_id: user.user_id, email: user.email },
+      config.jwt.secret,
+      { expiresIn: config.jwt.expiresIn }
     );
 
     console.log('✅ Login successful');
@@ -93,24 +94,24 @@ app.post('/api/register', async (req, res) => {
 
   try {
     // Check if user already exists
-    const existingUser = await db.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (existingUser.rows.length > 0) {
+    const existingUser = await db.get('SELECT * FROM users WHERE email = ?', [email]);
+    if (existingUser) {
       return res.status(400).json({ success: false, message: 'Email already in use' });
     }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert user into PostgreSQL
-    const result = await db.query(
-      'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING user_id, email',
+    // Insert user into SQLite
+    const result = await db.run(
+      'INSERT INTO users (email, password) VALUES (?, ?)',
       [email, hashedPassword]
     );
 
     res.json({
       success: true,
       message: 'User registered successfully',
-      user: result.rows[0], // Return user ID and email
+      user: { user_id: result.lastID, email }, // Return user ID and email
     });
   } catch (error) {
     console.error('Error during registration:', error);
@@ -123,12 +124,12 @@ app.get('/api/data', authenticateToken, async (req, res) => {
   console.log(`📊 Fetching trades for user_id: ${req.user.user_id}...`);
 
   try {
-    const trades = await db.query(
-      `SELECT * FROM trades WHERE user_id = $1 ORDER BY time_of_first_entry DESC;`,
+    const trades = await db.all(
+      `SELECT * FROM trades WHERE user_id = ? ORDER BY time_of_first_entry DESC;`,
       [req.user.user_id]
     );
 
-    res.json({ success: true, data: trades.rows });
+    res.json({ success: true, data: trades });
   } catch (error) {
     console.error('❌ Error fetching trades:', error);
     res.status(500).json({ success: false, message: 'Error fetching trade data' });
@@ -139,7 +140,7 @@ app.get('/api/agg_daily_data', authenticateToken, async (req, res) => {
   console.log(`📊 Fetching daily stats for user_id: ${req.user.user_id}...`);
 
   try {
-    const trades = await db.query(
+    const trades = await db.all(
       `SELECT 
             DATE(time_of_first_entry) AS trade_date,
             COUNT(*) AS total_trades,
@@ -169,16 +170,13 @@ app.get('/api/agg_daily_data', authenticateToken, async (req, res) => {
               ) 
             ) AS total_rr
         FROM trades 
-        WHERE user_id = $1
+        WHERE user_id = ?
         GROUP BY trade_date
-        ORDER BY trade_date;
-
-
-      `,
+        ORDER BY trade_date;`,
       [req.user.user_id]
     );
 
-    res.json({ success: true, data: trades.rows });
+    res.json({ success: true, data: trades });
   } catch (error) {
     console.error('❌ Error fetching agg stats:', error);
     res.status(500).json({ success: false, message: 'Error fetching agg stats' });
@@ -190,14 +188,14 @@ app.get('/api/trade-accounts', authenticateToken, async (req, res) => {
   console.log(`📂 Fetching trade accounts for user_id: ${req.user.user_id}...`);
 
   try {
-    const tradeAccounts = await db.query(
-      `SELECT DISTINCT trade_account FROM trades WHERE user_id = $1;`,
+    const tradeAccounts = await db.all(
+      `SELECT DISTINCT trade_account FROM trades WHERE user_id = ?;`,
       [req.user.user_id]
     );
 
     res.json({
       success: true,
-      tradeAccounts: tradeAccounts.rows.map((row) => row.trade_account), // Extract trade account names
+      tradeAccounts: tradeAccounts.map((row) => row.trade_account), // Extract trade account names
     });
   } catch (error) {
     console.error('❌ Error fetching trade accounts:', error);
@@ -205,7 +203,343 @@ app.get('/api/trade-accounts', authenticateToken, async (req, res) => {
   }
 });
 
-// **Protected file upload route (with PostgreSQL processing)**
+// **Update Trade**
+app.put('/api/trades/:tradeId', authenticateToken, async (req, res) => {
+  console.log(`✏️ Updating trade ${req.params.tradeId}...`);
+  const tradeId = req.params.tradeId;
+  const user_id = req.user.user_id;
+  const updateData = req.body;
+
+  try {
+    // Verify the trade belongs to the user
+    const existingTrade = await db.get(
+      'SELECT trade_id FROM trades WHERE trade_id = ? AND user_id = ?',
+      [tradeId, user_id]
+    );
+
+    if (!existingTrade) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Trade not found or access denied' 
+      });
+    }
+
+    // Prepare the update query dynamically based on provided fields
+    const allowedFields = [
+      'symbol', 'side', 'total_entry_stock_amount', 'avg_entry_price', 'avg_exit_price',
+      'num_entries', 'num_exits', 'stop_loss', 'price_target', 'time_of_first_entry',
+      'time_of_last_exit', 'trade_account', 'notes'
+    ];
+
+    const updateFields = [];
+    const updateValues = [];
+    
+    allowedFields.forEach(field => {
+      if (updateData[field] !== undefined) {
+        updateFields.push(`${field} = ?`);
+        updateValues.push(updateData[field]);
+      }
+    });
+
+    if (updateFields.length === 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'No valid fields to update' 
+      });
+    }
+
+    // Add trade_id and user_id to the values array
+    updateValues.push(tradeId, user_id);
+
+    const updateQuery = `
+      UPDATE trades 
+      SET ${updateFields.join(', ')}, 
+          pnl = CASE 
+            WHEN side = 'Buy' THEN total_entry_stock_amount * (avg_exit_price - avg_entry_price)
+            ELSE total_entry_stock_amount * -1 * (avg_exit_price - avg_entry_price)
+          END,
+          outcome = CASE 
+            WHEN (CASE 
+              WHEN side = 'Buy' THEN total_entry_stock_amount * (avg_exit_price - avg_entry_price)
+              ELSE total_entry_stock_amount * -1 * (avg_exit_price - avg_entry_price)
+            END) >= 0 THEN 'Profit'
+            ELSE 'Loss'
+          END
+      WHERE trade_id = ? AND user_id = ?
+    `;
+
+    const result = await db.run(updateQuery, updateValues);
+
+    if (result.changes > 0) {
+      console.log(`✅ Trade ${tradeId} updated successfully`);
+      res.json({ 
+        success: true, 
+        message: 'Trade updated successfully',
+        changes: result.changes
+      });
+    } else {
+      res.status(400).json({ 
+        success: false, 
+        message: 'No changes made to the trade' 
+      });
+    }
+  } catch (error) {
+    console.error('❌ Error updating trade:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error updating trade' 
+    });
+  }
+});
+
+// **Delete Trade**
+app.delete('/api/trades/:tradeId', authenticateToken, async (req, res) => {
+  console.log(`🗑️ Deleting trade ${req.params.tradeId}...`);
+  const tradeId = req.params.tradeId;
+  const user_id = req.user.user_id;
+
+  try {
+    // Verify the trade belongs to the user
+    const existingTrade = await db.get(
+      'SELECT trade_id FROM trades WHERE trade_id = ? AND user_id = ?',
+      [tradeId, user_id]
+    );
+
+    if (!existingTrade) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Trade not found or access denied' 
+      });
+    }
+
+    // Delete the trade (journal entries will be automatically deleted due to CASCADE)
+    const result = await db.run(
+      'DELETE FROM trades WHERE trade_id = ? AND user_id = ?',
+      [tradeId, user_id]
+    );
+
+    if (result.changes > 0) {
+      console.log(`✅ Trade ${tradeId} deleted successfully`);
+      res.json({ 
+        success: true, 
+        message: 'Trade deleted successfully',
+        changes: result.changes
+      });
+    } else {
+      res.status(400).json({ 
+        success: false, 
+        message: 'Failed to delete trade' 
+      });
+    }
+  } catch (error) {
+    console.error('❌ Error deleting trade:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error deleting trade' 
+    });
+  }
+});
+
+// **Create Journal Entry**
+app.post('/api/journal', authenticateToken, async (req, res) => {
+  console.log('📝 Creating journal entry...');
+  const { trade_id, trade_account, journal_content } = req.body;
+  const user_id = req.user.user_id;
+
+  if (!trade_id || !trade_account || !journal_content) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Trade ID, trade account, and journal content are required' 
+    });
+  }
+
+  try {
+    // Verify the trade belongs to the user
+    const trade = await db.get(
+      'SELECT trade_id FROM trades WHERE trade_id = ? AND user_id = ?',
+      [trade_id, user_id]
+    );
+
+    if (!trade) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Trade not found or access denied' 
+      });
+    }
+
+    // Check if journal entry already exists
+    const existingJournal = await db.get(
+      'SELECT journal_id FROM trade_journals WHERE trade_id = ? AND user_id = ?',
+      [trade_id, user_id]
+    );
+
+    if (existingJournal) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Journal entry already exists for this trade' 
+      });
+    }
+
+    // Create journal entry
+    const result = await db.run(
+      'INSERT INTO trade_journals (trade_id, user_id, trade_account, journal_content) VALUES (?, ?, ?, ?)',
+      [trade_id, user_id, trade_account, JSON.stringify(journal_content)]
+    );
+
+    res.json({
+      success: true,
+      message: 'Journal entry created successfully',
+      journal_id: result.lastID
+    });
+  } catch (error) {
+    console.error('❌ Error creating journal entry:', error);
+    res.status(500).json({ success: false, message: 'Error creating journal entry' });
+  }
+});
+
+// **Get Journal Entry for a Trade**
+app.get('/api/journal/:trade_id', authenticateToken, async (req, res) => {
+  console.log(`📖 Fetching journal for trade_id: ${req.params.trade_id}...`);
+  const { trade_id } = req.params;
+  const user_id = req.user.user_id;
+
+  try {
+    const journal = await db.get(
+      'SELECT * FROM trade_journals WHERE trade_id = ? AND user_id = ?',
+      [trade_id, user_id]
+    );
+
+    if (!journal) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Journal entry not found' 
+      });
+    }
+
+    // Parse the JSON content
+    journal.journal_content = JSON.parse(journal.journal_content);
+
+    res.json({
+      success: true,
+      journal
+    });
+  } catch (error) {
+    console.error('❌ Error fetching journal entry:', error);
+    res.status(500).json({ success: false, message: 'Error fetching journal entry' });
+  }
+});
+
+// **Update Journal Entry**
+app.put('/api/journal/:trade_id', authenticateToken, async (req, res) => {
+  console.log(`✏️ Updating journal for trade_id: ${req.params.trade_id}...`);
+  const { trade_id } = req.params;
+  const { journal_content } = req.body;
+  const user_id = req.user.user_id;
+
+  if (!journal_content) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Journal content is required' 
+    });
+  }
+
+  try {
+    // Check if journal entry exists and belongs to user
+    const existingJournal = await db.get(
+      'SELECT journal_id FROM trade_journals WHERE trade_id = ? AND user_id = ?',
+      [trade_id, user_id]
+    );
+
+    if (!existingJournal) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Journal entry not found' 
+      });
+    }
+
+    // Update journal entry
+    await db.run(
+      'UPDATE trade_journals SET journal_content = ?, updated_at = CURRENT_TIMESTAMP WHERE trade_id = ? AND user_id = ?',
+      [JSON.stringify(journal_content), trade_id, user_id]
+    );
+
+    res.json({
+      success: true,
+      message: 'Journal entry updated successfully'
+    });
+  } catch (error) {
+    console.error('❌ Error updating journal entry:', error);
+    res.status(500).json({ success: false, message: 'Error updating journal entry' });
+  }
+});
+
+// **Delete Journal Entry**
+app.delete('/api/journal/:trade_id', authenticateToken, async (req, res) => {
+  console.log(`🗑️ Deleting journal for trade_id: ${req.params.trade_id}...`);
+  const { trade_id } = req.params;
+  const user_id = req.user.user_id;
+
+  try {
+    // Check if journal entry exists and belongs to user
+    const existingJournal = await db.get(
+      'SELECT journal_id FROM trade_journals WHERE trade_id = ? AND user_id = ?',
+      [trade_id, user_id]
+    );
+
+    if (!existingJournal) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Journal entry not found' 
+      });
+    }
+
+    // Delete journal entry
+    await db.run(
+      'DELETE FROM trade_journals WHERE trade_id = ? AND user_id = ?',
+      [trade_id, user_id]
+    );
+
+    res.json({
+      success: true,
+      message: 'Journal entry deleted successfully'
+    });
+  } catch (error) {
+    console.error('❌ Error deleting journal entry:', error);
+    res.status(500).json({ success: false, message: 'Error deleting journal entry' });
+  }
+});
+
+// **Get All Journal Entries for User**
+app.get('/api/journals', authenticateToken, async (req, res) => {
+  console.log(`📚 Fetching all journals for user_id: ${req.user.user_id}...`);
+  const user_id = req.user.user_id;
+
+  try {
+    const journals = await db.all(
+      `SELECT j.*, t.symbol, t.side, t.pnl, t.outcome 
+       FROM trade_journals j 
+       JOIN trades t ON j.trade_id = t.trade_id 
+       WHERE j.user_id = ? 
+       ORDER BY j.created_at DESC`,
+      [user_id]
+    );
+
+    // Parse JSON content for each journal
+    journals.forEach(journal => {
+      journal.journal_content = JSON.parse(journal.journal_content);
+    });
+
+    res.json({
+      success: true,
+      journals
+    });
+  } catch (error) {
+    console.error('❌ Error fetching journals:', error);
+    res.status(500).json({ success: false, message: 'Error fetching journals' });
+  }
+});
+
+// **Protected file upload route (with SQLite processing)**
 app.post('/api/upload', authenticateToken, async (req, res) => {
   console.log('📂 Uploading process started...');
 
@@ -215,7 +549,7 @@ app.post('/api/upload', authenticateToken, async (req, res) => {
   }
 
   const uploadedFiles = Array.isArray(req.files.file) ? req.files.file : [req.files.file];
-  const uploadDir = path.join(__dirname, 'uploads');
+      const uploadDir = path.join(__dirname, config.upload.directory);
 
   if (!fs.existsSync(uploadDir)) {
     console.log('📂 Creating uploads directory...');

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import papa from 'papaparse';
-import db from './db.js'; // ✅ Import PostgreSQL connection
+import db from './db.js'; // ✅ Import SQLite connection
 
 // Function to get actual fill price from an order row
 function getFillPrice(order) {
@@ -99,36 +99,41 @@ const processTrades = async (historyFilePath, positionsFilePath, user_id, trade_
                 positionQty += qtySigned;
                 currentTrade.exit_orders.push(order);
               } else {
+                // Position closed, finalize trade
                 currentTrade.exit_orders.push(order);
                 tradeSummary.push(currentTrade);
 
-                positionQty = qtySigned + positionQty;
-                const newSide = positionQty > 0 ? 'Buy' : 'Sell';
-                currentTrade = {
-                  Symbol: symbol,
-                  Side: newSide,
-                  entry_orders: [
-                    { ...order, Qty: Math.abs(qtySigned) - Math.abs(positionQty), Side: newSide },
-                  ],
-                  exit_orders: [],
-                };
+                // Start new trade if there's remaining position
+                const remainingQty = positionQty + qtySigned;
+                if (remainingQty !== 0) {
+                  positionQty = remainingQty;
+                  currentTrade = {
+                    Symbol: symbol,
+                    Side: remainingQty > 0 ? 'Buy' : 'Sell',
+                    entry_orders: [order],
+                    exit_orders: [],
+                  };
+                } else {
+                  positionQty = 0;
+                  currentTrade = null;
+                }
               }
             }
           }
         });
 
+        // Add final trade if position is still open
         if (currentTrade && currentTrade.entry_orders.length > 0) {
           tradeSummary.push(currentTrade);
         }
       });
     };
 
-    // Process trades
     processTradeLogic();
 
-    console.log(`✅ Processed ${tradeSummary.length} trades.`);
+    console.log(`✅ Processed ${tradeSummary.length} trades`);
 
-    // Insert trades into PostgreSQL
+    // Insert trades into SQLite database
     for (const trade of tradeSummary) {
       const symbol = trade.Symbol;
       const side = trade.Side;
@@ -191,13 +196,13 @@ const processTrades = async (historyFilePath, positionsFilePath, user_id, trade_
           limitOrders[limitOrders.length - 1]['Stop Price'];
       }
 
-      // Insert into PostgreSQL
-      await db.query(
+      // Insert into SQLite
+      await db.run(
         `INSERT INTO trades 
         (user_id, trade_account, symbol, side, time_of_first_entry, avg_entry_price, total_entry_stock_amount, 
          time_of_last_exit, avg_exit_price, total_exit_stock_amount, total_buy, total_sell, pnl, outcome, 
          num_entries, num_exits, stop_loss, price_target) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`,
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           user_id,
           trade_account,
@@ -221,7 +226,7 @@ const processTrades = async (historyFilePath, positionsFilePath, user_id, trade_
       );
     }
 
-    console.log('✅ Trade data successfully inserted into PostgreSQL!');
+    console.log('✅ Trade data successfully inserted into SQLite!');
   } catch (error) {
     console.error('❌ Error processing trades:', error);
   }

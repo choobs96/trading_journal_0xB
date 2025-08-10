@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import NavBar from './components/Navbar';
-import TradeCards from './components/TradeCards';
 import Table from './components/Table';
 import TradeForm from './components/TradeForm';
 import LoginPage from './components/LoginPage';
 import FileUpload from './components/FileUpload';
+import Journals from './components/Journals';
+import Insights from './components/Insights';
 import axios from 'axios';
+import config from './config.js';
 
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -20,6 +23,7 @@ import aggregatedData from './components/AggregatedStats';
 function App() {
   const [toggleAdd, setToggleAdd] = useState(false);
   const [toggleLogin, setToggleLogin] = useState(false);
+  const [toggleJournals, setToggleJournals] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [token, setToken] = useState(localStorage.getItem('auth_token') || null); // Use the token from localStorage
   const [data, setData] = useState(null); // State to store data from backend
@@ -40,7 +44,7 @@ function App() {
   useEffect(() => {
     if (authenticated && token) {
       axios
-        .get('http://localhost:5001/api/data', {
+        .get(`${config.api.baseURL}/api/data`, {
           headers: {
             Authorization: `Bearer ${token}`, // Send the token in the Authorization header
           },
@@ -60,7 +64,7 @@ function App() {
   useEffect(() => {
     if (authenticated && token) {
       axios
-        .get('http://localhost:5001/api/agg_daily_data', {
+        .get(`${config.api.baseURL}/api/agg_daily_data`, {
           headers: {
             Authorization: `Bearer ${token}`, // Send the token in the Authorization header
           },
@@ -98,12 +102,14 @@ function App() {
     setToggleAdd((prevState) => !prevState);
   }
 
-  // Toggle the login form
   function toggleLoginForm() {
     setToggleLogin((prevState) => !prevState);
   }
 
-  // Calendar rendering logic
+  function toggleJournalsForm() {
+    setToggleJournals((prevState) => !prevState);
+  }
+
   const TradeCalendar = ({ trades = [] }) => {
     if (!trades || trades.length === 0) {
       return <p>Loading trades or no data available...</p>; // Handle empty state gracefully
@@ -164,42 +170,84 @@ function App() {
       />
     );
   };
-  console.log(data);
-  return (
+
+  // Main Dashboard Component
+  const Dashboard = () => (
     <>
-      <header>
-        <NavBar
-          onToggleForm={toggleTradeForm}
-          onToggleLogin={toggleLoginForm}
-          onLoginupdate={authenticated}
-          onLogout={handleLogout}
-        />
-      </header>
-      <main className="app-container">
-        {toggleAdd && <FileUpload onUploadClose={() => toggleTradeForm()} />}
-        {toggleLogin && <LoginPage onLoginClose={() => toggleLoginForm()} onLogin={handleLogin} />}
-
-        {!authenticated && <p>Please log in to access the content.</p>}
-
-        {authenticated && (
-          <>
-            {data ? (
-              <>
-                <Table tradedata={data} />
-                {aggData && aggData.length > 0 ? (
-                  <TradeCalendar trades={aggData} />
-                ) : (
-                  <p>No trade data available</p>
-                )}
-              </>
-            ) : (
-              <p>Loading data...</p>
-            )}
-          </>
-        )}
-      </main>
+      {data ? (
+        <>
+          <Table tradedata={data} />
+          {aggData && aggData.length > 0 ? (
+            <TradeCalendar trades={aggData} />
+          ) : (
+            <p>No trade data available</p>
+          )}
+        </>
+      ) : (
+        <p>Loading data...</p>
+      )}
     </>
   );
+
+  // Protected Route Component
+  const ProtectedRoute = ({ children }) => {
+    if (!authenticated) {
+      return <Navigate to="/login" replace />;
+    }
+    return children;
+  };
+
+  console.log(data);
+  console.log('App render - authenticated:', authenticated, 'data:', data);
+  
+  // Add error boundary for debugging
+  try {
+    return (
+      <>
+        <header>
+          <NavBar
+            onToggleForm={toggleTradeForm}
+            onToggleLogin={toggleLoginForm}
+            onToggleJournals={toggleJournalsForm}
+            onLoginupdate={authenticated}
+            onLogout={handleLogout}
+          />
+        </header>
+        <main className="app-container">
+          {toggleAdd && <FileUpload onUploadClose={() => toggleTradeForm()} />}
+          {toggleLogin && <LoginPage onLoginClose={() => toggleLoginForm()} onLogin={handleLogin} />}
+          {toggleJournals && <Journals onClose={() => toggleJournalsForm()} />}
+
+          <Routes>
+            <Route path="/" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/insights" element={
+              <ProtectedRoute>
+                <Insights tradedata={data} />
+              </ProtectedRoute>
+            } />
+            <Route path="/login" element={
+              !authenticated ? <LoginPage onLoginClose={() => {}} onLogin={handleLogin} /> : <Navigate to="/" replace />
+            } />
+          </Routes>
+
+          {!authenticated && <p>Please log in to access the content.</p>}
+        </main>
+      </>
+    );
+  } catch (error) {
+    console.error('Error rendering App component:', error);
+    return (
+      <div style={{ padding: '20px', color: 'red' }}>
+        <h1>Error occurred</h1>
+        <p>{error.message}</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  }
 }
 
 export default App;
