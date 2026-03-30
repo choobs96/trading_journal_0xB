@@ -1,0 +1,132 @@
+.analytics {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.analytics-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e1e4e8;
+  margin: 0;
+}
+
+.period-selector {
+  display: flex;
+  gap: 4px;
+  background: #1a1d23;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.period-btn {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  color: #6a6f78;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.period-btn:hover {
+  color: #b0b5be;
+}
+
+.period-btn.active {
+  background: #60a5fa;
+  color: #fff;
+}
+
+.chart-subtitle {
+  font-size: 12px;
+  color: #6a6f78;
+  margin: -8px 0 12px 0;
+}
+
+/* Session cards */
+.session-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.session-card {
+  background: #12141a;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.session-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a8f98;
+  margin-bottom: 8px;
+}
+
+.session-pnl {
+  font-size: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.session-pnl.positive { color: #4ade80; }
+.session-pnl.negative { color: #f87171; }
+
+.session-meta {
+  font-size: 12px;
+  color: #6a6f78;
+  margin-top: 4px;
+}
+
+/* Insights */
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.insight-card {
+  background: #12141a;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.insight-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8a8f98;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.insight-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #e1e4e8;
+  font-variant-numeric: tabular-nums;
+}
+
+.insight-note {
+  font-size: 11px;
+  color: #4a4f58;
+  margin-top: 6px;
+}
+
+@media (max-width: 900px) {
+  .analytics-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,102 @@
+.add-trade-page {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.add-trade-card {
+  background: #1a1d23;
+  border: 1px solid #2a2d35;
+  border-radius: 12px;
+  padding: 32px;
+  width: 100%;
+  max-width: 640px;
+}
+
+.add-trade-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e1e4e8;
+  margin: 0 0 24px 0;
+}
+
+.add-trade-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8a8f98;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select {
+  background: #12141a;
+  border: 1px solid #2a2d35;
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: #e1e4e8;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #60a5fa;
+}
+
+.form-group input::placeholder {
+  color: #4a4f58;
+}
+
+.form-error {
+  font-size: 11px;
+  color: #f87171;
+}
+
+.submit-btn {
+  background: #60a5fa;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover {
+  background: #3b82f6;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+  .add-trade-card {
+    padding: 20px;
+  }
+}

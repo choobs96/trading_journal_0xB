@@ -1,0 +1,119 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── KPI Grid ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+/* ── Chart Sections ── */
+.chart-section {
+  background: #1a1d23;
+  border: 1px solid #2a2d35;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.chart-section.full-width {
+  width: 100%;
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #8a8f98;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 16px 0;
+}
+
+.chart-row {
+  display: flex;
+  gap: 16px;
+}
+
+.chart-row .flex-1 {
+  flex: 1;
+}
+
+.chart-row .flex-2 {
+  flex: 2;
+}
+
+/* ── Custom Tooltip ── */
+.chart-tooltip {
+  background: #12141a;
+  border: 1px solid #2a2d35;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+}
+
+.chart-tooltip-label {
+  font-weight: 600;
+  color: #e1e4e8;
+  margin-bottom: 6px;
+}
+
+.chart-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: #b0b5be;
+}
+
+/* ── Side Stats ── */
+.side-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 0;
+}
+
+.side-stat-card {
+  text-align: center;
+  padding: 16px;
+  background: #12141a;
+  border-radius: 8px;
+}
+
+.side-stat-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #8a8f98;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.side-stat-pnl {
+  font-size: 28px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.side-stat-meta {
+  font-size: 12px;
+  color: #6a6f78;
+  margin-top: 4px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .chart-row {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
