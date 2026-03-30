@@ -1,0 +1,241 @@
+.import-page {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.import-card {
+  background: #1a1d23;
+  border: 1px solid #2a2d35;
+  border-radius: 12px;
+  padding: 32px;
+  width: 100%;
+  max-width: 720px;
+}
+
+.import-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e1e4e8;
+  margin: 0 0 8px 0;
+}
+
+.import-desc {
+  color: #6a6f78;
+  font-size: 14px;
+  margin: 0 0 20px 0;
+}
+
+/* ── Fields Reference ── */
+.import-fields-ref {
+  background: #12141a;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.fields-ref-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8a8f98;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.fields-ref-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.field-badge {
+  background: #252830;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #60a5fa;
+}
+
+.fields-ref-note {
+  font-size: 11px;
+  color: #4a4f58;
+}
+
+/* ── Drop Zone ── */
+.drop-zone {
+  border: 2px dashed #2a2d35;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.drop-zone:hover,
+.drop-zone.drag-active {
+  border-color: #60a5fa;
+  background: rgba(96, 165, 250, 0.05);
+}
+
+.drop-zone.has-file {
+  border-style: solid;
+  border-color: #3a3d45;
+  padding: 24px;
+}
+
+.drop-zone-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.drop-icon {
+  font-size: 36px;
+  color: #4a4f58;
+  font-weight: 300;
+}
+
+.drop-text {
+  color: #6a6f78;
+  font-size: 14px;
+}
+
+.drop-zone-file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.file-icon {
+  background: #60a5fa;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+.file-name {
+  color: #e1e4e8;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.file-action {
+  margin-left: auto;
+  color: #6a6f78;
+  font-size: 12px;
+}
+
+/* ── Error ── */
+.import-error {
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #f87171;
+  font-size: 13px;
+  white-space: pre-wrap;
+  margin-bottom: 16px;
+}
+
+/* ── Preview ── */
+.import-preview {
+  margin-top: 8px;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.preview-count {
+  font-size: 14px;
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.import-btn {
+  background: #4ade80;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  color: #0a0b0d;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.import-btn:hover {
+  background: #22c55e;
+}
+
+.preview-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #2a2d35;
+  border-radius: 8px;
+}
+
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.preview-table th {
+  background: #12141a;
+  color: #8a8f98;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #2a2d35;
+}
+
+.preview-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #1e2028;
+  color: #b0b5be;
+}
+
+.preview-more {
+  text-align: center;
+  padding: 10px;
+  color: #6a6f78;
+  font-size: 12px;
+}
+
+/* ── Sample CSV ── */
+.sample-csv {
+  margin-top: 20px;
+}
+
+.sample-csv summary {
+  color: #6a6f78;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 8px 0;
+}
+
+.sample-csv summary:hover {
+  color: #8a8f98;
+}
+
+.sample-csv-content {
+  background: #12141a;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 11px;
+  color: #8a8f98;
+  overflow-x: auto;
+  margin-top: 8px;
+}

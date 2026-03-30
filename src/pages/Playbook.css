@@ -1,0 +1,120 @@
+.playbook {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.playbook-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e1e4e8;
+  margin: 0 0 4px 0;
+}
+
+.playbook-desc {
+  font-size: 14px;
+  color: #6a6f78;
+  margin: 0;
+}
+
+/* ── Table ── */
+.playbook-table-wrapper {
+  overflow-x: auto;
+}
+
+.playbook-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.playbook-table th {
+  background: #12141a;
+  color: #8a8f98;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #2a2d35;
+}
+
+.playbook-table td {
+  padding: 12px;
+  border-bottom: 1px solid #1e2028;
+  color: #b0b5be;
+}
+
+.playbook-row {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.playbook-row:hover {
+  background: #1e2128;
+}
+
+.playbook-row.active {
+  background: rgba(96, 165, 250, 0.1);
+  border-left: 3px solid #60a5fa;
+}
+
+.strategy-tag {
+  background: #252830;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #e1e4e8;
+}
+
+.wr-good { color: #4ade80; font-weight: 600; }
+.wr-bad { color: #f87171; font-weight: 600; }
+
+/* ── Filtered Stats ── */
+.filter-tag-highlight {
+  color: #60a5fa;
+}
+
+.filtered-stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 16px;
+}
+
+.filtered-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filtered-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6a6f78;
+  text-transform: uppercase;
+}
+
+.filtered-stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e1e4e8;
+  font-variant-numeric: tabular-nums;
+}
+
+.clear-filter-btn {
+  background: #252830;
+  border: 1px solid #3a3d45;
+  border-radius: 6px;
+  padding: 8px 16px;
+  color: #8a8f98;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.clear-filter-btn:hover {
+  background: #3a3d45;
+  color: #e1e4e8;
+}
